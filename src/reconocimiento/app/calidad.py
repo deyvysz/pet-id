@@ -20,7 +20,7 @@ LADO_NITIDEZ = 256  # lado menor al que se reescala antes de medir la nitidez
 @dataclass
 class ResultadoCalidad:
     aceptada: bool
-    motivo: Optional[str]  # 'borrosa' | 'oscura' | None
+    motivo: Optional[str]  # 'pequena' | 'borrosa' | 'oscura' | None
     calidad: float  # 0-1, solo informativo
     brillo: float
     nitidez: float
@@ -64,7 +64,7 @@ def evaluar(imagen: Image.Image, recorte: Optional[Image.Image] = None, revisar_
     cal = puntaje(b, n)
     motivo = None
     if min(imagen.size) < LADO_MIN:
-        motivo = "borrosa"  # el contrato no tiene motivo 'pequeña'; una foto chica se trata como borrosa
+        motivo = "pequena"
     elif b < BRILLO_MIN:
         motivo = "oscura"
     elif revisar_nitidez and n < NITIDEZ_MIN:

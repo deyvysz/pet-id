@@ -8,14 +8,14 @@ def test_nitida_aceptada():
     assert 0 <= r.calidad <= 1
 
 
-def test_pequena_es_borrosa():
+def test_pequena():
     r = calidad.evaluar(imagen_nitida(lado=399))
-    assert r.motivo == "borrosa"
+    assert r.motivo == "pequena"
 
 
 def test_lado_menor_manda():
     # 800 x 300: el lado menor no llega a 400
-    assert calidad.evaluar(imagen_nitida(lado=800, alto=300)).motivo == "borrosa"
+    assert calidad.evaluar(imagen_nitida(lado=800, alto=300)).motivo == "pequena"
     assert calidad.evaluar(imagen_nitida(lado=800, alto=400)).aceptada
 
 

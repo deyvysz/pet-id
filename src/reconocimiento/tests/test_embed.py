@@ -1,7 +1,9 @@
+from typing import get_args
+
 import numpy as np
 import pytest
 
-from app.contratos import DIM, EmbedSalida
+from app.contratos import DIM, EmbedSalida, MotivoRechazo
 from app.detector import Deteccion, armar_resultado
 from tests.conftest import AMARILLO, AZUL, ROJO, VERDE, imagen_borrosa, imagen_nitida, imagen_oscura
 
@@ -47,13 +49,19 @@ def test_gato(cliente, imagenes):
     (imagen_nitida(marca=AZUL), "varias_mascotas"),
     (imagen_oscura(), "oscura"),
     (imagen_borrosa(), "borrosa"),
-    (imagen_nitida(lado=300), "borrosa"),
 ])
 def test_rechazos(cliente, imagenes, imagen, motivo):
     s, _ = embed(cliente, imagenes, imagen)
     assert not s.detectado
     assert s.motivo == motivo
     assert s.vectores is None
+
+
+# 'pequena' entra a MotivoRechazo en contratos.py por main (lo cambia el coordinador)
+@pytest.mark.skipif("pequena" not in get_args(MotivoRechazo), reason="contratos.py aún sin el motivo 'pequena'")
+def test_rechazo_pequena(cliente, imagenes):
+    s, _ = embed(cliente, imagenes, imagen_nitida(lado=300))
+    assert not s.detectado and s.motivo == "pequena" and s.vectores is None
 
 
 def test_rostro_aproximado_solo_en_tipos_de_cara(cliente, imagenes):

@@ -18,7 +18,7 @@ No se usan Ultralytics YOLO ni MegaDescriptor por sus licencias (`docs/decisione
 ## Flujo de /embed
 
 1. Se corrige la orientación EXIF y se reduce a 1600 px de lado mayor.
-2. Tamaño y brillo sobre la foto completa: lado menor bajo 400 px → `borrosa`; luminancia media bajo 40 → `oscura`.
+2. Tamaño y brillo sobre la foto completa: lado menor bajo 400 px → `pequena`; luminancia media bajo 40 → `oscura`.
 3. Detección. Ninguna mascota → `sin_mascota` (o `borrosa` si la foto entera está desenfocada). Dos o más → `varias_mascotas`. Una cabeza detectada dentro del cuerpo no cuenta como segunda mascota, ni un animal lejano con menos del 25 % del área de la principal.
 4. Nitidez (varianza del Laplaciano) sobre el recorte del cuerpo, no sobre la foto entera, para no rechazar fotos con fondo desenfocado. Bajo 60 → `borrosa`.
 5. Vectores de cuerpo y de rostro en un solo lote. El rostro sale de la detección "dog face"/"cat face"; si OWL-ViT no lo encuentra, se aproxima con la mitad superior del cuerpo, pero solo en fotos `frente`, `perfil_izq` y `perfil_der`. En `cuerpo`, `marcas` y `hallazgo` el animal puede estar de lado y esa aproximación daría un vector de rostro malo con 60 % del peso; ahí se devuelve `rostro: null` y la búsqueda usa solo el cuerpo.
@@ -28,9 +28,9 @@ No se usan Ultralytics YOLO ni MegaDescriptor por sus licencias (`docs/decisione
 
 ## Worker de la cola
 
-`python -m app.cola` lee `fotos_por_procesar` (pgmq) con mensajes `{"foto_id", "url_firmada", "tipo"}`. Por cada uno: marca la foto `procesando`, aplica el flujo de /embed, reemplaza sus filas en `vectores_foto`, deja la foto `lista` o `rechazada` con su motivo y calidad, recalcula `mascotas.lista_para_busqueda` (al menos un vector de rostro y uno de cuerpo) y borra el mensaje, todo en una transacción. La especie que se guarda es la declarada en `mascotas` o `hallazgos`; la detectada se usa solo si no hay otra.
+`python -m app.cola` lee `fotos_por_procesar` (pgmq) con mensajes `{"foto_id", "mascota_id", "tipo", "ruta_storage"}` (decisión 007). Solo llegan fotos de mascota; las de hallazgo van por /embed síncrono. Por cada mensaje: marca la foto `procesando`, lee el objeto del bucket `fotos` con la clave de servicio (`SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`), aplica el flujo de /embed, reemplaza sus filas en `vectores_foto`, deja la foto `lista` o `rechazada` con su motivo y calidad y borra el mensaje, todo en una transacción. `mascotas.lista_para_busqueda` la mantiene un trigger de la migración 0004. La especie que se guarda es la declarada en `mascotas`; la detectada se usa solo si no hay otra.
 
-Si algo falla, el mensaje vuelve a la cola cuando vence su visibilidad (120 s). Tras 5 intentos se archiva y la foto queda `rechazada` sin motivo.
+Si algo falla, el mensaje vuelve a la cola cuando vence su visibilidad (120 s). Tras 5 intentos se archiva y la foto queda `rechazada` con motivo `error_proceso`.
 
 ## Variables de entorno
 
@@ -38,6 +38,7 @@ Si algo falla, el mensaje vuelve a la cola cuando vence su visibilidad (120 s). 
 |---|---|---|
 | `MODELO` | `real` o `falso` | `real` |
 | `DATABASE_URL` | Postgres para /search y el worker | vacío (índice en memoria) |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | lectura de Storage en el worker | vacío |
 | `URL_HOSTS_PERMITIDOS` | hosts de descarga permitidos, separados por coma | vacío (cualquiera) |
 | `DESCARGA_MAX_BYTES`, `DESCARGA_TIMEOUT` | límites de descarga | 15 MB, 15 s |
 | `COLA`, `COLA_VISIBILIDAD_S`, `COLA_MAX_INTENTOS` | worker | `fotos_por_procesar`, 120, 5 |
@@ -61,7 +62,7 @@ Servicio local con falsos: `MODELO=falso uvicorn app.main:app --reload`.
 ```
 docker build -t pet-id-reconocimiento src/reconocimiento
 docker run -p 8000:8000 -e DATABASE_URL=... pet-id-reconocimiento
-docker run -e DATABASE_URL=... pet-id-reconocimiento python -m app.cola
+docker run -e DATABASE_URL=... -e SUPABASE_URL=... -e SUPABASE_SERVICE_ROLE_KEY=... pet-id-reconocimiento python -m app.cola
 ```
 
 La imagen instala torch para CPU y descarga los pesos de ambos modelos en el build; al arrancar no sale a Hugging Face.
