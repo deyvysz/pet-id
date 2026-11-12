@@ -1,0 +1,242 @@
+/* Estilos de la web del propietario. Copiados de docs/diseno/prototipo.html; tokens en app/globals.css. */
+
+/* ---- Marco: columna de teléfono; en >=900px, cabecera + barra lateral ---- */
+.marco{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--surface);display:flex;flex-direction:column;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+@media (max-width:512px){.marco{border:0;max-width:none}}
+.webOnly{display:none}
+.cuerpo{flex:1;display:flex;flex-direction:column}
+.principal{flex:1;display:flex;flex-direction:column;min-width:0}
+
+.bar{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;min-height:58px;padding:0 12px}
+.bar h2{font:600 19px/1.2 var(--f-body);letter-spacing:0;margin:0}
+.barMarca{padding:0 16px;justify-content:space-between}
+.iconBtn{width:44px;height:44px;border:0;background:none;color:var(--ink);display:grid;place-items:center;border-radius:12px;cursor:pointer;flex:none}
+.iconBtn:hover{background:var(--sunk)}
+
+.logo{font-family:var(--f-display);font-weight:700;font-size:20px;display:inline-flex;align-items:center;gap:8px;color:var(--ink);letter-spacing:-0.02em;text-decoration:none}
+.logo b{color:var(--brand);font-weight:700}
+.logoMark{width:32px;height:32px;border-radius:9px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;flex:none}
+.logoMark svg{width:20px;height:20px}
+
+.screen{flex:1;display:flex;flex-direction:column;gap:18px;padding:22px 20px 56px}
+.screen h1{font-size:28px;letter-spacing:-0.02em}
+.screen h2{letter-spacing:-0.02em}
+.screen p{margin:0}
+.spacer{flex:1;min-height:8px}
+.lead{font-size:18px}
+.muted{color:var(--muted);font-size:15px}
+.center{text-align:center}
+.h2s{font-size:19px}
+.sectionH{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:4px 0 0;font-family:var(--f-body)}
+.mono{font-family:var(--f-mono);font-weight:700;letter-spacing:.06em}
+
+/* ---- Botones ---- */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;padding:0 22px;border-radius:999px;border:2px solid var(--brand);background:var(--brand);color:var(--brand-ink);font:700 17px/1.2 var(--f-body);text-decoration:none;cursor:pointer;text-align:center}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.55;cursor:not-allowed;filter:none}
+.btn.sec{background:var(--surface);color:var(--ink)}
+.btn.sec:hover{background:var(--sunk);filter:none}
+.btn.danger{background:var(--lost);border-color:var(--lost);color:#fff}
+.btn.dashed{border-style:dashed;background:transparent;color:var(--ink)}
+.btn.small{min-height:44px;font-size:16px;padding:0 12px}
+.btn.auto{width:auto}
+.btnRow{display:flex;gap:10px}
+.btnRow .btn{flex:1;min-width:0;padding:0 10px}
+.linkbtn{background:none;border:0;padding:8px;font:500 15px var(--f-body);color:var(--muted);text-decoration:underline;cursor:pointer;align-self:center}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+
+/* ---- Formularios ---- */
+.field{display:flex;flex-direction:column;gap:6px;border:0;padding:0;margin:0;min-width:0}
+.field label,.legend{font-weight:600;font-size:15px}
+.legend{margin-bottom:6px;padding:0}
+.input{width:100%;min-height:50px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface);color:var(--ink);font:400 17px var(--f-body)}
+.input:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+textarea.input{min-height:96px;resize:vertical}
+.hint{font-size:14px;color:var(--muted)}
+.err{font-size:14px;color:var(--lost);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.two>*{min-width:0}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{position:relative}
+.pill input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.pill span{display:flex;align-items:center;min-height:44px;padding:0 18px;border:1.5px solid var(--line);border-radius:22px;font-weight:600}
+.pill input:checked+span{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.pill input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:15px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--brand);flex:none;margin:0}
+.prefix{display:flex;gap:8px}
+.prefix span{display:grid;place-items:center;min-width:64px;border:1.5px solid var(--line);border-radius:12px;font-weight:700;background:var(--sunk)}
+.otp{font-family:var(--f-mono);font-size:28px;letter-spacing:.5em;text-align:center}
+
+/* ---- Notas, tarjetas, chips ---- */
+.note{border-radius:12px;padding:14px 16px;background:var(--sunk);font-size:15px;display:flex;flex-direction:column;gap:4px}
+.note b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.note.med{background:var(--accent-soft)}
+.note.med b{color:var(--ink)}
+.note.warn{background:var(--warn-soft)}
+.note.warn b{color:var(--warn)}
+.note.lost{background:var(--lost-soft)}
+.note.lost b{color:var(--lost)}
+.note ul{margin:2px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:2px}
+.card{border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--sunk);border:1px solid var(--line);white-space:nowrap;color:var(--ink)}
+.chip.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.chip.lost{background:var(--lost-soft);color:var(--lost);border-color:transparent}
+.chip.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.roundIc{width:80px;height:80px;border-radius:50%;background:var(--accent-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.roundIc svg{width:32px;height:32px}
+.busy{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:600}
+.busy::before{content:"";width:18px;height:18px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--ink);animation:gira .8s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+
+/* ---- Mis mascotas ---- */
+.pets{display:flex;flex-direction:column;gap:16px}
+.petRow{display:flex;gap:14px;align-items:center}
+.petRow>div:last-child{min-width:0}
+.petRow h2{font-size:28px}
+.photo{border-radius:var(--r);background:var(--mint);color:var(--brand);display:grid;place-items:center;overflow:hidden;position:relative;max-width:100%;flex:none}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo svg{width:42%;height:auto;opacity:.85}
+.menuList{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.menuList button,.menuList a{display:flex;justify-content:space-between;align-items:center;min-height:54px;background:none;border:0;border-bottom:1px solid var(--line);font:600 16px var(--f-body);color:var(--ink);cursor:pointer;padding:0 4px;text-align:left;text-decoration:none}
+.menuList span:last-child{color:var(--muted)}
+
+/* ---- Fotos guiadas ---- */
+.meterCard{border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.meterTop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.meterTop strong{font-family:var(--f-display);font-size:22px}
+.meter{display:flex;gap:4px}
+.meter span{flex:1;height:10px;border-radius:5px;background:var(--line)}
+.meter span.req{background:var(--brand)}
+.meter span.rec{background:var(--accent)}
+.meterLegend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.meterLegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.shots{display:flex;flex-direction:column;gap:12px}
+.shot{border:1.5px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.shot.ok{border-color:var(--ok)}
+.shot.warn{border-color:var(--warn)}
+.shot.lost{border-color:var(--lost)}
+.shotHead{display:flex;gap:12px;align-items:flex-start}
+.shotIc{width:56px;height:56px;flex:none;border-radius:12px;background:var(--sunk);display:grid;place-items:center;color:var(--ink)}
+.shotHead>div{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.shotTitle{font-weight:700;font-size:17px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.shotThumb{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--sunk);position:relative}
+.shotThumb img{width:100%;height:100%;object-fit:cover;display:block}
+.issues{margin:0;padding-left:20px;color:var(--warn);font-size:15px;font-weight:500;display:flex;flex-direction:column;gap:4px}
+.issues.lost{color:var(--lost)}
+
+/* ---- Privacidad ---- */
+.toggles{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:62px;padding:8px 0;border-bottom:1px solid var(--line)}
+.tg small{display:block;color:var(--muted);font-size:14px}
+
+/* ---- DNI ---- */
+.dniGrid{display:flex;flex-direction:column;gap:18px}
+.idcard{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.idHead{background:var(--brand);color:var(--brand-ink);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.idHead .logo,.idHead .logo b{color:var(--brand-ink);font-size:17px}
+.idHead .logoMark{background:var(--brand-ink);color:var(--brand);width:26px;height:26px}
+.idHead small{font-size:11px;font-weight:700;letter-spacing:.08em}
+.idBody{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:14px}
+.idBody>*{min-width:0}
+.idPhoto{aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--mint);color:var(--brand);display:grid;place-items:center}
+.idPhoto img{width:100%;height:100%;object-fit:cover}
+.idPhoto svg{width:50%}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:0}
+.dl div{min-width:0}
+.dl dt{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.dl dd{margin:0;font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.dl .wide{grid-column:1/-1}
+.idNombre{font-family:var(--f-display);font-size:22px!important;font-weight:800!important}
+.idFoot{border-top:1.5px dashed var(--line);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.idFoot>div:first-child{min-width:0;display:flex;flex-direction:column;gap:2px}
+.idQr{width:84px;flex:none;background:#fff;padding:5px;border-radius:8px}
+.idQr img{display:block;width:100%;height:auto}
+.cap{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.verificado{font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.verificado svg{color:var(--ok);width:22px;height:22px}
+.idLegend{padding:0 14px 14px}
+
+/* ---- Salud ---- */
+.entries{display:flex;flex-direction:column;gap:12px}
+.entry{border:1.5px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.entryTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.entryTop strong{font-size:17px}
+.carne{width:88px;aspect-ratio:4/3;border-radius:8px;overflow:hidden;max-width:100%}
+.carne img{width:100%;height:100%;object-fit:cover;display:block}
+.carneGrande{width:140px}
+
+/* ---- Extravío ---- */
+.ownerband{background:var(--lost-soft);color:var(--lost);padding:14px 20px;display:flex;flex-direction:column;gap:2px;font-weight:600}
+.ownerband strong{font-family:var(--f-display);font-size:22px}
+
+/* ---- Aviso de configuración y estados ---- */
+.aviso{margin:16px 20px 0;border-radius:12px;padding:14px 16px;background:var(--warn-soft);color:var(--ink);font-size:15px;display:flex;flex-direction:column;gap:4px}
+.aviso b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--warn)}
+.aviso code{font-family:var(--f-mono);font-size:13px}
+.demoTag{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:2px 10px}
+
+/* ---- Panel de acceso (crear cuenta, ingresar, verificar) ---- */
+.authSide{display:none}
+.heroPhoto{border-radius:28px;overflow:hidden;aspect-ratio:442/212;max-width:100%}
+.heroPhoto img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---- Escritorio ---- */
+@media (min-width:900px){
+  .marco{max-width:none;border:0;background:var(--bg)}
+  .webOnly{display:block}
+  .mobOnly{display:none!important}
+  .siteHead{position:sticky;top:0;z-index:6;background:var(--surface);border-bottom:1px solid var(--line)}
+  .siteHeadIn{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:18px;min-height:70px;padding:0 24px}
+  .siteNav{display:flex;gap:24px;margin-left:auto}
+  .siteNav a{text-decoration:none;font-weight:700;font-size:15px;color:var(--ink);padding:8px 0;border-bottom:3px solid transparent}
+  .siteNav a.on{border-bottom-color:var(--accent)}
+  .headCta{display:flex;gap:10px;align-items:center}
+  .headCta .btn{width:auto;min-height:44px;font-size:15px;padding:0 18px}
+  .userChip{display:inline-flex;align-items:center;gap:8px;font-weight:700;padding:0 6px}
+  .userChip svg{width:22px;height:22px;color:var(--brand)}
+
+  .cuerpo{width:100%;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;padding:28px 24px 0;align-items:start}
+  .principal>.bar{position:static;background:none;border:0;padding:0 0 10px;min-height:auto}
+  .principal>.bar h2{font:700 26px/1.2 var(--f-display);letter-spacing:-.02em}
+  .principal .screen{background:var(--surface);border-radius:24px;box-shadow:var(--shadow);border:1px solid var(--line);padding:28px 32px 32px;margin-bottom:96px}
+  .principal .ownerband{border-radius:24px 24px 0 0}
+  .principal .ownerband+.screen{border-top-left-radius:0;border-top-right-radius:0}
+  .aviso{margin:0 0 16px}
+
+  .side{position:sticky;top:96px;display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+  .side nav{display:flex;flex-direction:column;gap:2px}
+  .side nav a,.side nav button{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:12px;text-decoration:none;color:var(--ink);font:700 15px var(--f-body);background:none;border:0;cursor:pointer;text-align:left}
+  .side nav a:hover,.side nav button:hover{background:var(--sunk)}
+  .side nav a.on{background:var(--accent-soft);color:var(--brand)}
+  .side svg{width:20px;height:20px;flex:none}
+  .sidePet{display:flex;gap:10px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .sidePet img,.sidePet .sideSinFoto{width:44px;height:44px;border-radius:12px;object-fit:cover;flex:none;background:var(--mint)}
+  .sidePet>div{display:flex;flex-direction:column;min-width:0}
+  .sidePet .mono{font-size:12px;color:var(--muted)}
+  .sidePlan{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+
+  .pets,.shots,.entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+  .dniGrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+
+  .marcoAuth{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:100vh}
+  .authSide{display:flex;flex-direction:column;gap:22px;justify-content:center;background:var(--mint);padding:48px clamp(32px,5vw,72px)}
+  .authSide h2{font-size:clamp(32px,3.4vw,44px);line-height:1.08}
+  .authSide h2 em{font-style:normal;color:var(--brand)}
+  .authSide p{font-size:18px;max-width:30em;margin:0}
+  .marcoAuth .principal{align-items:center;padding:48px 24px;background:var(--surface)}
+  .marcoAuth .principal>*{width:100%;max-width:520px}
+  .marcoAuth .principal .screen{box-shadow:none;border:0;padding:0;background:none;margin-bottom:0}
+  .marcoAuth .principal>.bar{padding-bottom:16px}
+}
+
+/* ---- Impresión del DNI ---- */
+@media print{
+  .noPrint,.siteHead,.side,.bar,.aviso{display:none!important}
+  .marco{background:#fff;border:0}
+  .cuerpo{display:block;padding:0}
+  .principal .screen{box-shadow:none;border:0;padding:0}
+  .idcard{box-shadow:none;max-width:520px;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media (prefers-reduced-motion:reduce){.busy::before{animation:none}}
