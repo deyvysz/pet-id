@@ -1,10 +1,12 @@
 """Worker de la cola pgmq 'fotos_por_procesar'.
 
-Mensaje: {"foto_id": "...", "url_firmada": "...", "tipo": "frente"}
-Por cada mensaje: descarga, procesa (mismo flujo que /embed), guarda en vectores_foto,
-actualiza fotos.estado / motivo_rechazo / calidad y recalcula mascotas.lista_para_busqueda.
+Mensaje (decisión 007): {"foto_id", "mascota_id", "tipo", "ruta_storage"}. Solo fotos de
+mascota; las de hallazgo van por /embed síncrono.
+Por cada mensaje: lee el objeto del bucket 'fotos' con la clave de servicio, procesa (mismo
+flujo que /embed), guarda en vectores_foto, actualiza fotos.estado / motivo_rechazo / calidad
+y recalcula mascotas.lista_para_busqueda.
 
-Uso: DATABASE_URL=... MODELO=real python -m app.cola
+Uso: DATABASE_URL=... SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... MODELO=real python -m app.cola
 """
 import logging
 import os
@@ -14,7 +16,7 @@ from typing import Callable
 from PIL import Image
 
 from .contratos import EmbedSalida
-from .descarga import ErrorDescarga, descargar_imagen
+from .descarga import ErrorDescarga, descargar_de_storage
 from .detector import Detector, crear_detector
 from .indice import a_texto_vector
 from .procesamiento import procesar
@@ -34,22 +36,22 @@ def leer_mensaje(conn):
 
 
 def guardar_resultado(conn, msg_id: int, res: EmbedSalida) -> None:
-    """Escribe el resultado y borra el mensaje en una sola transacción."""
+    """Escribe el resultado y borra el mensaje en una sola transacción.
+    mascota_id y especie se leen de la base (no del mensaje), que es la fuente de verdad."""
     with conn.transaction():
         fila = conn.execute(
-            "select f.mascota_id, m.especie::text, h.especie::text from fotos f "
-            "left join mascotas m on m.id = f.mascota_id left join hallazgos h on h.id = f.hallazgo_id "
-            "where f.id = %s",
+            "select f.mascota_id, m.especie::text from fotos f "
+            "left join mascotas m on m.id = f.mascota_id where f.id = %s",
             (res.foto_id,),
         ).fetchone()
         if fila is None:
             log.warning("foto %s no existe; se descarta el mensaje %s", res.foto_id, msg_id)
             conn.execute("select pgmq.delete(%s, %s::bigint)", (COLA, msg_id))
             return
-        mascota_id, especie_mascota, especie_hallazgo = fila
+        mascota_id, especie_mascota = fila
 
-        # la especie declarada manda; la detectada es respaldo
-        especie = especie_mascota or especie_hallazgo or res.especie
+        # la especie declarada por el propietario manda; la detectada es respaldo
+        especie = especie_mascota or res.especie
         if res.detectado and especie:
             conn.execute("delete from vectores_foto where foto_id = %s", (res.foto_id,))
             pares = [("cuerpo", res.vectores.cuerpo)]
@@ -72,41 +74,34 @@ def guardar_resultado(conn, msg_id: int, res: EmbedSalida) -> None:
                 "update fotos set estado = 'rechazada', motivo_rechazo = %s, calidad = %s where id = %s",
                 (motivo, res.calidad, res.foto_id),
             )
-
-        if mascota_id is not None:
-            conn.execute(
-                "update mascotas set lista_para_busqueda = ("
-                " exists(select 1 from vectores_foto where mascota_id = %s and tipo = 'rostro') and"
-                " exists(select 1 from vectores_foto where mascota_id = %s and tipo = 'cuerpo')"
-                "), actualizado_at = now() where id = %s",
-                (mascota_id, mascota_id, mascota_id),
-            )
+        # mascotas.lista_para_busqueda la mantiene un trigger (migración 0004)
         conn.execute("select pgmq.delete(%s, %s::bigint)", (COLA, msg_id))
 
 
 def marcar_fallida(conn, msg_id: int, foto_id: str) -> None:
-    """Tras MAX_INTENTOS se archiva el mensaje y la foto queda rechazada sin motivo del contrato."""
+    """Tras MAX_INTENTOS se archiva el mensaje y la foto queda rechazada con motivo error_proceso."""
     with conn.transaction():
-        conn.execute("update fotos set estado = 'rechazada', motivo_rechazo = null where id = %s", (foto_id,))
+        conn.execute("update fotos set estado = 'rechazada', motivo_rechazo = 'error_proceso' where id = %s", (foto_id,))
         conn.execute("select pgmq.archive(%s, %s::bigint)", (COLA, msg_id))
 
 
 def procesar_mensaje(conn, detector: Detector, extractor: Extractor,
-                     cargador: Callable[[str], Image.Image] = descargar_imagen) -> bool:
-    """Procesa un mensaje. Devuelve False si la cola estaba vacía."""
+                     cargador: Callable[[str], Image.Image] = descargar_de_storage) -> bool:
+    """Procesa un mensaje. Devuelve False si la cola estaba vacía.
+    `cargador` recibe la ruta_storage y devuelve la imagen."""
     fila = leer_mensaje(conn)
     if fila is None:
         return False
     msg_id, intentos, msg = fila
-    foto_id = msg.get("foto_id")
-    if not foto_id:
-        log.error("mensaje %s sin foto_id; se archiva", msg_id)
+    foto_id, ruta = msg.get("foto_id"), msg.get("ruta_storage")
+    if not foto_id or not ruta:
+        log.error("mensaje %s sin foto_id o ruta_storage; se archiva", msg_id)
         conn.execute("select pgmq.archive(%s, %s::bigint)", (COLA, msg_id))
         return True
     try:
         conn.execute("update fotos set estado = 'procesando' where id = %s", (foto_id,))
-        imagen = cargador(msg["url_firmada"])
-        res = procesar(imagen, foto_id, msg.get("tipo", "hallazgo"), detector, extractor)
+        imagen = cargador(ruta)
+        res = procesar(imagen, foto_id, msg.get("tipo", "cuerpo"), detector, extractor)
         guardar_resultado(conn, msg_id, res)
         log.info("foto %s: detectado=%s motivo=%s", foto_id, res.detectado, res.motivo)
     except Exception as e:  # el mensaje vuelve a la cola cuando vence la visibilidad
