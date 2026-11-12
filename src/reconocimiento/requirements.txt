@@ -1,0 +1,11 @@
+# Servicio de reconocimiento PET ID. Versiones fijas.
+# torch se instala desde el índice CPU de PyTorch (ver Dockerfile).
+fastapi==0.162.5
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+numpy==2.5.3
+pillow==12.3.0
+httpx==0.28.1
+psycopg[binary]==3.3.9
+torch==2.8.0
+transformers==4.57.6
