@@ -29,6 +29,8 @@ export const MOTIVO_TXT: Record<MotivoRechazo, string> = {
   borrosa: "La foto está movida o desenfocada.",
   oscura: "La foto está oscura.",
   varias_mascotas: "Aparece más de una mascota.",
+  pequena: "La foto es muy pequeña.",
+  error_proceso: "No pudimos procesar la foto. Súbela de nuevo.",
 };
 
 export const TIPO_SALUD_TXT: Record<TipoRegistroSalud, string> = {

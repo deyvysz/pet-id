@@ -4,23 +4,33 @@ Actualizado: 12 de noviembre de 2026.
 
 ## Fase actual
 
-Diseño terminado. Construcción por iniciar.
+Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falta conectar servicios reales (Supabase, modelo de reconocimiento, correo y SMS).
 
 ## Hecho
 
-- Evaluación del MVP y recorte de alcance.
-- Requisitos del cliente comparados con nuestro análisis y reestructurados con IA desde la fase 1.
-- Prototipo navegable de 24 pantallas, móvil y escritorio, con el estilo de la maqueta de inicio (teal y azul marino).
-- Flujo funcional con arquitectura, registro, carriles y secuencia de búsqueda por foto.
-- Estructura del proyecto en Drive (`Interno - PET ID`) y en este repositorio (privado, creado el 12 de noviembre de 2026).
+- Día 1: esquema, contratos y reparto de rutas congelados (decisión 006).
+- Base de datos: migraciones 0001 a 0007, seed de demo y pruebas de acceso que pasan contra Postgres 16 con pgvector (`infra/supabase/pruebas/probar.sh`).
+- Reconocimiento: servicio FastAPI, worker de cola, script de evaluación; 48 pruebas pasan con modelos simulados.
+- Web: 27 rutas (propietario, pública, administración y API). tsc, lint y build pasan; en modo demo (`NEXT_PUBLIC_DEMO=1`) todas responden 200.
+- Decisiones 007, 008 y 009 con los ajustes de contrato de la integración.
 
 ## Siguiente
 
-1. Crear el proyecto Supabase y aplicar el esquema inicial (`infra/supabase/`).
-2. Día 1 de construcción: fijar contratos (`docs/diseno/contratos-api.md`) para que los cuatro frentes trabajen en paralelo.
-3. Reunir un conjunto de evaluación de fotos (mínimo 50 mascotas con 3 fotos o más) para calibrar el umbral.
+1. Crear el proyecto en Supabase, aplicar migraciones 0001 a 0007 y el seed, activar el proveedor SMS de Auth.
+2. Cargar las variables de `src/web/.env.example` y del servicio de reconocimiento.
+3. Desplegar el servicio de reconocimiento con los pesos reales (OWL-ViT y DINOv2) y probarlo con fotos reales.
+4. Reunir el conjunto de evaluación (50 mascotas, 3 fotos o más) y calibrar el umbral con `src/reconocimiento/eval/evaluar.py`.
+5. Revisión independiente de punta a punta.
+
+## Pendiente de Deyvys
+
+- Precio de Premium (la portada muestra S/ 9.90 como referencial).
+- Correo de contacto del pie de página.
+- Textos legales: términos, privacidad, libro de reclamaciones.
+- Si la vista pública debe aceptar solo consultas por PET ID exacto (decisión 007).
 
 ## Riesgos abiertos
 
+- Nada se ha probado aún contra Supabase real ni con los pesos reales del modelo.
 - Precisión del reconocimiento sin datos propios: se mide con Recall@1/5/10 antes de prometer porcentajes.
-- Mascotas sin rostro visible en la foto del hallazgo: se usa el vector de cuerpo y los filtros (especie, distrito, color).
+- En este entorno Google Fonts está bloqueado; el build se verificó con las fuentes simuladas.

@@ -274,5 +274,16 @@ do $$ begin
   assert not exists (select 1 from mascotas where pet_id = 'PE-00000127'), 'mascota borrada';
 end $$;
 
+-- 0007: verificar el celular en auth marca el perfil
+do $$
+declare u uuid := '0a000000-0000-4000-8000-000000000001';
+begin
+  update auth.users set phone_confirmed_at = null where id = u;
+  update public.perfiles set celular_verificado = false where id = u;
+  update auth.users set phone_confirmed_at = now() where id = u;
+  assert (select celular_verificado from public.perfiles where id = u), 'celular verificado por trigger (0007)';
+end $$;
+
 \echo 'Todas las pruebas de acceso pasaron.'
 rollback;
+
