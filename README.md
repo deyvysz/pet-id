@@ -12,6 +12,9 @@ Proyecto interno. Requisitos de la Dra. Isabel De Castro.
 
 ## Cómo empezar
 
+Para levantarlo en local (WSL o Linux con Docker): `scripts/local.sh preparar` y luego `scripts/local.sh iniciar`. Detalle en `docs/operacion/entorno-local-wsl.md`.
+
+
 1. Leer `ESTADO.md` y las decisiones en `docs/decisiones/`.
 2. Abrir `docs/diseno/prototipo.html` en el navegador: son las 24 pantallas acordadas.
 3. Leer `docs/diseno/arquitectura.md` y `docs/diseno/contratos-api.md` antes de escribir código.

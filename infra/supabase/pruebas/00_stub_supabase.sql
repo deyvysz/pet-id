@@ -31,6 +31,7 @@ create table if not exists auth.users (
   encrypted_password text,
   email_confirmed_at timestamptz,
   phone_confirmed_at timestamptz,
+  phone text,
   raw_app_meta_data jsonb,
   raw_user_meta_data jsonb,
   confirmation_token text,

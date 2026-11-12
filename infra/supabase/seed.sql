@@ -31,6 +31,12 @@ values
    '', '', '', '', now(), now())
 on conflict (id) do nothing;
 
+-- Celular en Auth para entrar desde la web con código SMS (en local, código fijo 123456; ver config.toml).
+update auth.users set phone = '51987654321', phone_confirmed_at = coalesce(phone_confirmed_at, now())
+  where id = '0a000000-0000-4000-8000-000000000001';
+update auth.users set phone = '51900000000', phone_confirmed_at = coalesce(phone_confirmed_at, now())
+  where id = '0a000000-0000-4000-8000-000000000002';
+
 insert into auth.identities (id, provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
 values
   ('0b000000-0000-4000-8000-000000000001', '0a000000-0000-4000-8000-000000000001',
