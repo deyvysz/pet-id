@@ -284,6 +284,28 @@ begin
   assert (select celular_verificado from public.perfiles where id = u), 'celular verificado por trigger (0007)';
 end $$;
 
+-- 0008: alta por SMS, el celular se confirma antes de que exista el perfil
+do $$
+declare u uuid := '0a000000-0000-4000-8000-000000000006';
+begin
+  insert into auth.users (id, raw_user_meta_data) values (u, '{}');
+  update auth.users set phone_confirmed_at = now() where id = u;
+  insert into public.perfiles (id, nombres, apellidos, tipo_documento, numero_documento, celular,
+                               departamento, provincia, distrito, acepta_terminos_at, acepta_privacidad_at)
+  values (u, 'Ceci', 'Luna', 'DNI', '33334444', '933334444', 'Lima', 'Lima', 'Lince', now(), now());
+  assert (select celular_verificado from public.perfiles where id = u), 'celular verificado al crear el perfil (0008)';
+end $$;
+
+-- 0008: dos reportes activos no duplican la fila de la vista pública
+do $$
+declare m uuid := (select id from public.mascotas where pet_id = 'PE-00000125');
+begin
+  insert into public.reportes_perdida (mascota_id, fecha_perdida, distrito) values (m, now() - interval '2 days', 'Lince');
+  insert into public.reportes_perdida (mascota_id, fecha_perdida, distrito) values (m, now() - interval '1 day', 'Barranco');
+  assert (select count(*) from public.mascotas_publico where pet_id = 'PE-00000125') = 1, 'vista pública sin repetidos (0008)';
+  assert (select distrito_perdida from public.mascotas_publico where pet_id = 'PE-00000125') = 'Barranco', 'reporte activo más reciente (0008)';
+end $$;
+
 \echo 'Todas las pruebas de acceso pasaron.'
 rollback;
 

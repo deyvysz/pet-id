@@ -1,6 +1,6 @@
 // GET /api/v1/mascotas/{id}/certificado: PDF del certificado con código de verificación.
 // ?documento=dni devuelve el DNI de la mascota en PDF. Solo para el propietario (cookie de sesión o Bearer).
-// La primera descarga crea la fila en `certificados` (código PID-XXXX-XXXX) y guarda el PDF en el bucket 'documentos'.
+// La primera descarga crea la fila en `certificados` (código PID-XXXX-XXXX) y guarda el PDF en documentos/{mascota_id}/certificados/.
 import { BUCKET_DOCUMENTOS, supabaseServicio } from "@/lib/supabase";
 import { esDemo } from "@/components/propietario/demo";
 import { pdfCertificado, pdfDni } from "@/components/propietario/pdf";
@@ -25,7 +25,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     if (!dni && !esDemo()) {
       // Copia del certificado emitido. Si falla, igual se entrega el PDF.
-      const ruta = `certificados/${m.id}/${datos.certificado.codigo}.pdf`;
+      // Decisión 007: documentos/{mascota_id}/certificados/ (el propietario la lee por la política de 0003).
+      const ruta = `${m.id}/certificados/${datos.certificado.codigo}.pdf`;
       const sb = supabaseServicio();
       const up = await sb.storage.from(BUCKET_DOCUMENTOS).upload(ruta, bytes, { contentType: "application/pdf", upsert: true });
       if (!up.error) await sb.from("certificados").update({ ruta_pdf: ruta }).eq("codigo", datos.certificado.codigo);
