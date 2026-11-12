@@ -1,0 +1,423 @@
+[11/9, 00:03] Dra. Isabel De Castro: *PET ID*
+
+Plataforma Inteligente de Identificación Digital de Mascotas
+
+Concepto del negocio
+
+PET ID es un emprendimiento tecnológico que propone desarrollar una plataforma digital de identificación y registro de mascotas en el Perú, utilizando inteligencia artificial, reconocimiento biométrico animal y tecnología de identificación mediante códigos QR.
+
+Su objetivo es que cada mascota cuente con una identidad digital única y permanente, similar al concepto del DNI de las personas, vinculada a un propietario o responsable cuya identidad haya sido verificada.
+
+A través de la plataforma, el propietario podrá registrar a su mascota, obtener un número único de identificación PET ID, generar un certificado digital de registro y acceder a un documento de identidad de su mascota con fotografía, datos principales y código QR.
+
+Uno de los principales componentes innovadores será la incorporación de inteligencia artificial para el reconocimiento facial y biométrico de mascotas, con el propósito de facilitar su identificación mediante fotografías, incluso cuando no lleven collar o placa. Esta funcionalidad se desarrollará progresivamente y requerirá pruebas para validar su precisión.
+
+Además, PET ID permitirá almacenar información relevante, como vacunas, controles veterinarios, antecedentes médicos y datos de contacto del responsable, creando un expediente digital que acompañe a la mascota durante toda su vida.
+[11/9, 00:06] Dra. Isabel De Castro: *Propuesta de valor:*
+
+PET ID busca transformar la identificación de mascotas en el Perú mediante una solución digital que combine tecnología, seguridad y bienestar animal.
+
+Su valor diferencial será integrar en una sola plataforma la identidad digital de la mascota, la verificación del responsable, el reconocimiento biométrico, el expediente veterinario y herramientas para facilitar la recuperación de animales extraviados.
+
+PET ID no busca ser únicamente un registro de mascotas, sino convertirse en un ecosistema tecnológico de identificación y servicios para animales de compañía.
+
+La plataforma tendrá como visión alcanzar cobertura nacional, conectando progresivamente a propietarios, veterinarias, albergues y empresas del sector.
+
+PET ID — Cada mascota merece una identidad.
+[11/9, 08:33] Dra. Isabel De Castro: PET ID
+
+ESTRUCTURA Y REQUERIMIENTOS DE LA PLATAFORMA WEB
+
+Proyecto: PET ID – Plataforma Inteligente de Identificación Digital de Mascotas
+
+Objetivo: Desarrollar una plataforma tecnológica de registro e identificación digital de mascotas en Perú, que permita vincular cada animal con su responsable, asignarle un número único PET ID, emitir documentos digitales y centralizar su información.
+
+La plataforma deberá diseñarse para incorporar progresivamente reconocimiento biométrico animal mediante inteligencia artificial y servicios para veterinarias y otras empresas.
+
+
+1. PÁGINA PRINCIPAL (HOME)
+
+La página de inicio deberá transmitir una imagen moderna, tecnológica, confiable y amigable.
+
+Elementos principales:
+
+* Logotipo PET ID.
+* Menú de navegación.
+* Botón destacado: REGISTRA A TU MASCOTA.
+* Botón: INICIAR SESIÓN.
+* Presentación del concepto: «Cada mascota merece una identidad».
+* Explicación de los beneficios del registro.
+* Presentación visual del DNI digital PET ID.
+* Sección «¿Cómo funciona?».
+* Sección «¿Perdiste o encontraste una mascota?».
+* Planes y servicios.
+* Preguntas frecuentes.
+* Información de contacto y enlaces legales.
+
+La página deberá ser completamente adaptable a celulares, tablets y computadoras.
+
+2. REGISTRO DE USUARIOS Y PROPIETARIOS
+
+El usuario deberá crear una cuenta personal para administrar una o varias mascotas.
+
+Datos de registro:
+
+* Nombres y apellidos.
+* Tipo y número de documento de identidad.
+* Fecha de nacimiento, cuando resulte necesaria.
+* Correo electrónico.
+* Número de celular.
+* Departamento, provincia y distrito.
+* Contraseña o método de acceso seguro.
+* Aceptación de términos y condiciones.
+* Consentimientos de privacidad correspondientes.
+
+Verificación:
+
+* Confirmación de correo electrónico.
+* Verificación de celular mediante código OTP.
+* Autenticación segura.
+* Posibilidad de incorporar verificación documental de identidad mediante un proveedor autorizado.
+
+La plataforma podrá admitir Face ID o biometría del dispositivo como mecanismo de acceso, cuando esté disponible. Esto no sustituye la validación oficial de identidad.
+
+Importante: El DNI del propietario deberá mantenerse protegido y no aparecer públicamente en el documento digital de la mascota.
+
+3. REGISTRO DE MASCOTAS
+
+Cada usuario podrá registrar una o varias mascotas.
+
+Información solicitada:
+
+* Nombre de la mascota.
+* Especie.
+* Raza o condición mestiza.
+* Sexo: macho o hembra.
+* Fecha de nacimiento exacta o estimada.
+* Color y características físicas.
+* Fotografía principal.
+* Fotografías adicionales.
+* Número de microchip, si cuenta con uno.
+* Condición de esterilización, si se declara.
+* Datos complementarios de identificación.
+
+Identificación automática:
+
+Una vez completado el registro, el sistema deberá:
+
+1. Crear un expediente digital individual.
+2. Asignar un número PET ID único y permanente.
+3. Vincular la mascota con el usuario responsable.
+4. Generar un código QR individual.
+5. Emitir su documento digital PET ID.
+
+*El número PET ID deberá ser independiente del DNI del propietario para permitir cambios de responsable sin modificar la identidad del animal.*
+
+4. DNI DIGITAL PET ID
+
+Cada mascota tendrá un documento digital descargable.
+
+Contenido:
+
+* Logotipo PET ID.
+* Fotografía de la mascota.
+* Nombre.
+* Número único PET ID.
+* Especie.
+* Raza.
+* Sexo.
+* Fecha de nacimiento declarada o estimada.
+* Código QR de identificación.
+* Fecha de registro.
+* Estado del registro.
+
+Funciones:
+
+* Visualización desde la cuenta.
+* Descarga en PDF.
+* Impresión.
+* Consulta mediante QR.
+* Actualización automática de los datos permitidos.
+
+El documento deberá identificarse como una credencial privada de registro PET ID y no como un documento oficial emitido por una autoridad pública.
+
+5. CERTIFICADO DIGITAL DE REGISTRO
+
+El sistema deberá generar un certificado digital con los datos declarados al momento del registro.
+
+Podrá denominarse:
+
+«Certificado de Registro e Identificación PET ID».
+
+Incluirá:
+
+* Número PET ID.
+* Nombre y características de la mascota.
+* Fecha de inscripción.
+* Identificación del responsable, en la versión privada.
+* Código de verificación.
+* QR.
+* Fecha de emisión.
+
+El certificado acreditará la inscripción en la plataforma, sin sustituir documentos oficiales ni constituir por sí solo prueba definitiva de propiedad.
+
+6. PERFIL DIGITAL DE CADA MASCOTA
+
+Cada mascota tendrá un expediente individual al que podrá acceder su responsable.
+
+Secciones del perfil:
+
+A. Identificación
+
+* Datos generales.
+* Fotografías.
+* Número PET ID.
+* Código QR.
+
+B. Salud
+
+* Vacunas.
+* Desparasitación.
+* Controles veterinarios.
+* Alergias declaradas.
+* Medicamentos o tratamientos.
+* Documentos veterinarios adjuntos.
+
+C. Historial
+
+* Fecha de registro.
+* Modificaciones relevantes.
+* Cambios de responsable.
+* Documentos incorporados.
+
+D. Estado
+
+* Mascota activa.
+* Mascota extraviada.
+* Mascota encontrada.
+* Mascota fallecida.
+
+Los registros médicos podrán diferenciar información declarada por el propietario de aquella validada por un profesional veterinario.
+
+7. IDENTIFICACIÓN MEDIANTE CÓDIGO QR
+
+Cada mascota contará con un QR único.
+
+Al escanearlo, se abrirá una página pública limitada que podrá mostrar:
+
+* Nombre de la mascota.
+* Fotografía.
+* Número PET ID.
+* Estado de extravío.
+* Botón «Encontré esta mascota».
+* Formulario para enviar un aviso al responsable.
+
+El QR no deberá revelar el DNI, dirección, teléfono ni correo personal del propietario sin autorización.
+
+La plataforma enviará la notificación al responsable mediante los canales habilitados.
+
+8. MASCOTAS PERDIDAS Y ENCONTRADAS
+
+Se desarrollará un módulo de búsqueda y recuperación.
+
+Funciones para el propietario:
+
+* Reportar mascota extraviada.
+* Registrar última ubicación conocida.
+* Incorporar fecha y fotografías.
+* Actualizar el estado.
+* Recibir avisos de posibles hallazgos.
+
+Funciones para quien encuentra una mascota:
+
+* Escanear el QR.
+* Consultar la información pública autorizada.
+* Reportar el hallazgo.
+* Enviar fotografías y ubicación aproximada.
+* Contactar al responsable mediante mensajería protegida.
+
+La función de reporte y contacto básico deberá ser gratuita.
+
+9. INTELIGENCIA ARTIFICIAL Y RECONOCIMIENTO BIOMÉTRICO ANIMAL
+
+Este será uno de los componentes tecnológicos más importantes del proyecto.
+
+Objetivo: permitir que la plataforma compare fotografías de mascotas con registros existentes para identificar posibles coincidencias.
+
+Funcionamiento previsto:
+
+1. Captura de varias fotografías durante el registro.
+2. Procesamiento mediante un modelo de visión artificial.
+3. Extracción de características visuales.
+4. Creación de una representación biométrica.
+5. Comparación con imágenes de animales registrados.
+6. Presentación de posibles coincidencias para revisión.
+
+Se recomienda iniciar con perros y gatos.
+
+Consideraciones técnicas:
+
+* Evaluar precisión por especie.
+* Evitar coincidencias falsas.
+* Permitir verificación humana.
+* No presentar resultados inciertos como identificaciones definitivas.
+* Mantener un sistema alternativo de identificación mediante QR o microchip.
+
+Esta funcionalidad podrá desarrollarse en una segunda etapa, después de validar técnicamente el prototipo.
+
+10. PANEL PRIVADO DEL USUARIO
+
+Una vez iniciada sesión, el propietario accederá a un panel personal.
+
+Opciones:
+
+* Mi perfil.
+* Mis mascotas.
+* Registrar nueva mascota.
+* Ver DNI digital.
+* Descargar certificados.
+* Actualizar información.
+* Registrar vacunas y controles.
+* Reportar extravío.
+* Administrar notificaciones.
+* Consultar servicios y suscripciones.
+* Configuración de privacidad y seguridad.
+
+El sistema deberá permitir administrar varias mascotas desde una misma cuenta.
+
+11. PLANES Y MODELO COMERCIAL
+
+La plataforma deberá estar preparada para operar con un modelo gratuito y servicios de pago.
+
+PLAN PET ID FREE
+
+* Registro de mascota.
+* Número único PET ID.
+* DNI digital.
+* Código QR.
+* Perfil básico.
+* Reporte de extravío.
+
+PLAN PET ID PREMIUM
+
+* Expediente ampliado.
+* Historial veterinario.
+* Recordatorios automáticos.
+* Almacenamiento adicional.
+* Funcionalidades personalizadas.
+* Servicios complementarios.
+
+SERVICIOS ADICIONALES
+
+* Placas físicas con QR.
+* Tarjetas de identificación.
+* Accesorios personalizados.
+* Servicios para veterinarias.
+* Integraciones con empresas.
+
+Los precios se definirán después de evaluar costos, competencia y disposición de pago.
+
+12. PORTAL PARA VETERINARIAS
+
+Se proyecta desarrollar un módulo empresarial para establecimientos veterinarios.
+
+Funciones:
+
+* Registro de establecimiento y profesionales autorizados.
+* Búsqueda de mascotas por número PET ID.
+* Acceso autorizado al expediente.
+* Registro de vacunas y controles.
+* Actualización de información médica.
+* Emisión de constancias de atención.
+* Administración de usuarios del establecimiento.
+
+El acceso a información deberá contar con autorización del responsable y permisos diferenciados.
+
+Modelo comercial: suscripción mensual para veterinarias, según funcionalidades contratadas.
+
+13. PANEL DE ADMINISTRACIÓN GENERAL
+
+PET ID deberá contar con un panel interno de gestión.
+
+Funciones principales:
+
+* Administración de usuarios.
+* Administración de mascotas.
+* Consulta de registros.
+* Gestión de solicitudes de verificación.
+* Gestión de reportes de extravío.
+* Administración de planes.
+* Control de pagos y suscripciones.
+* Gestión de veterinarias.
+* Estadísticas de uso.
+* Atención de incidencias.
+* Configuración de contenidos.
+* Auditoría de acciones relevantes.
+
+El acceso administrativo deberá estar restringido por roles y contar con mecanismos de seguridad.
+
+14. REQUERIMIENTOS TÉCNICOS GENERALES
+
+La plataforma deberá contemplar:
+
+* Diseño responsive.
+* Base de datos segura.
+* Autenticación y recuperación de cuenta.
+* Gestión de roles y permisos.
+* Generación de identificadores únicos.
+* Generación de documentos PDF.
+* Generación de códigos QR.
+* Almacenamiento protegido de imágenes y documentos.
+* Integración futura con pasarelas de pago.
+* Integración futura con servicios de inteligencia artificial.
+* Copias de seguridad.
+* Registro de actividades y cambios.
+* Cifrado de comunicaciones.
+* Políticas de conservación y eliminación de datos.
+* Escalabilidad para usuarios y registros a nivel nacional.
+
+La arquitectura deberá permitir incorporar una aplicación móvil en el futuro sin reconstruir toda la plataforma.
+
+15. ETAPAS DE DESARROLLO
+
+FASE 1 — PLATAFORMA FUNCIONAL (MVP)
+
+Desarrollo inicial de:
+
+* Página principal.
+* Registro y acceso de usuarios.
+* Registro de mascotas.
+* Número único PET ID.
+* DNI digital.
+* Certificado PDF.
+* Código QR.
+* Panel privado.
+* Reporte básico de mascotas perdidas.
+* Panel de administración.
+
+FASE 2 — SERVICIOS AVANZADOS
+
+* Expediente veterinario ampliado.
+* Notificaciones y recordatorios.
+* Suscripciones Premium.
+* Pagos digitales.
+* Venta de placas QR.
+* Portal para veterinarias.
+
+FASE 3 — INTELIGENCIA ARTIFICIAL
+
+* Reconocimiento biométrico animal.
+* Comparación de fotografías.
+* Búsqueda de posibles coincidencias.
+* Integraciones empresariales.
+* Optimización y expansión del sistema.
+
+16. OBJETIVO COMERCIAL
+
+PET ID busca construir una plataforma privada de identidad digital para mascotas, con capacidad de expansión nacional y un modelo de negocio escalable.
+
+El registro gratuito facilitará la incorporación de usuarios, mientras que los servicios Premium, los productos de identificación física y las suscripciones empresariales constituirán fuentes de ingresos.
+
+La visión es desarrollar un ecosistema tecnológico que conecte propietarios, mascotas, veterinarias y empresas especializadas, contribuyendo a una identificación más segura y a la recuperación de animales extraviados.
+
+PET ID — Cada mascota merece una identidad.
