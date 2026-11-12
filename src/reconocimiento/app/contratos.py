@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 Especie = Literal["perro", "gato"]
 TipoFoto = Literal["frente", "perfil_izq", "perfil_der", "cuerpo", "marcas", "hallazgo"]
-MotivoRechazo = Literal["sin_mascota", "borrosa", "oscura", "varias_mascotas"]
+MotivoRechazo = Literal["sin_mascota", "borrosa", "oscura", "varias_mascotas", "pequena", "error_proceso"]
 DIM = 768
 
 

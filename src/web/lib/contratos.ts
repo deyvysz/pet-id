@@ -6,7 +6,7 @@ export type Sexo = "macho" | "hembra";
 export type EstadoMascota = "activa" | "extraviada" | "encontrada" | "fallecida";
 export type TipoFoto = "frente" | "perfil_izq" | "perfil_der" | "cuerpo" | "marcas" | "hallazgo";
 export type EstadoProceso = "pendiente" | "procesando" | "lista" | "rechazada";
-export type MotivoRechazo = "sin_mascota" | "borrosa" | "oscura" | "varias_mascotas";
+export type MotivoRechazo = "sin_mascota" | "borrosa" | "oscura" | "varias_mascotas" | "pequena" | "error_proceso";
 export type TipoRegistroSalud = "vacuna" | "desparasitacion" | "control" | "alergia" | "medicamento" | "documento";
 
 /** Fotos mínimas del registro. 'marcas' es opcional. */

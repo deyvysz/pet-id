@@ -7,11 +7,11 @@ Fecha: 12 de noviembre de 2026. Se fijan el día 1 de construcción; después so
 `POST /embed`
 Entrada: `{ "foto_id": "uuid", "url": "https://... (URL firmada)", "tipo": "frente|perfil_izq|perfil_der|cuerpo|marcas|hallazgo" }`
 Salida: `{ "foto_id": "uuid", "detectado": true, "especie": "perro|gato", "calidad": 0.0-1.0, "vectores": { "rostro": [768], "cuerpo": [768] } }`
-Si no detecta mascota: `detectado: false` y un motivo (`sin_mascota`, `borrosa`, `oscura`, `varias_mascotas`).
+Si no detecta mascota: `detectado: false` y un motivo (`sin_mascota`, `borrosa`, `oscura`, `varias_mascotas`, `pequena`, `error_proceso`).
 
 `POST /search`
 Entrada: `{ "vectores": { "rostro": [768]|null, "cuerpo": [768] }, "filtros": { "especie": "perro", "distrito": "Miraflores", "solo_extraviadas": true }, "limite": 5 }`
-Salida: `{ "candidatos": [ { "mascota_id": "uuid", "puntaje": 0.83, "foto_url": "..." } ] }`
+Salida: `{ "candidatos": [ { "mascota_id": "uuid", "puntaje": 0.83, "foto_id": "uuid" } ] }`
 
 `GET /health`
 
