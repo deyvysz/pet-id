@@ -128,7 +128,9 @@ begin
   update perfiles set celular = '987000000';
   insert into registros_salud (mascota_id, tipo, nombre, fecha) values (v_id, 'vacuna', 'Antirrábica', '2026-11-01');
   insert into reportes_perdida (mascota_id, fecha_perdida, distrito) values (v_id, now(), 'Miraflores');
+  assert (select estado from mascotas where id = v_id) = 'extraviada', 'reporte activo pasa a extraviada (0005)';
   update reportes_perdida set activo = false, cerrado_at = now() where mascota_id = v_id;
+  assert (select estado from mascotas where id = v_id) = 'encontrada', 'reporte cerrado pasa a encontrada (0005)';
 
   -- Storage.
   insert into storage.objects (bucket_id, name) values ('fotos', v_id || '/f1.jpg');
@@ -209,7 +211,7 @@ begin
   assert (select count(*) from mascotas) = 3, 'admin lee mascotas';
   assert (select count(*) from historial) > 0, 'admin lee historial';
   perform 1 from hallazgos; perform 1 from mensajes_contacto;
-  update mascotas set estado = 'encontrada' where pet_id = 'PE-00000127';
+  update mascotas set estado = 'activa' where pet_id = 'PE-00000127';
   get diagnostics n = row_count; assert n = 1, 'admin cambia estado';
   assert exists (select 1 from historial where accion = 'cambio_estado' and actor_id = '0a000000-0000-4000-8000-000000000002'),
     'historial con el admin como actor';
