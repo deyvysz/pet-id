@@ -1,0 +1,8 @@
+# Lo mínimo para correr pytest con los modelos falsos (sin torch ni transformers).
+fastapi==0.162.5
+pydantic==2.13.5
+numpy==2.5.3
+pillow==12.3.0
+httpx==0.28.1
+psycopg[binary]==3.3.9
+pytest==9.1.1
