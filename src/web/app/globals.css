@@ -1,0 +1,32 @@
+/* Tokens tomados del prototipo (docs/diseno/prototipo.html). No cambiar sin decisión. */
+:root{
+  --brand:#0D7F76;--brand-ink:#FFFFFF;--accent:#1FB5A3;--accent-ink:#0A2346;--accent-soft:#E2F5F2;--mint:#C9EEEA;
+  --bg:#EEF6F5;--surface:#FFFFFF;--sunk:#F2F8F7;--ink:#0A2346;--muted:#4D5E74;--line:#D3E3E1;
+  --ok:#12795A;--ok-soft:#E1F4EC;--warn:#9A4A06;--warn-soft:#FEF0C7;--lost:#B42318;--lost-soft:#FDECEA;
+  --r:16px;--shadow:0 6px 24px rgba(10,35,70,.08);
+  --f-display:var(--font-poppins),"Segoe UI",system-ui,sans-serif;
+  --f-body:var(--font-nunito),system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --brand:#2CC4B2;--brand-ink:#04211D;--accent:#2CC4B2;--accent-ink:#04211D;--accent-soft:#0F3A38;--mint:#123F3D;
+  --bg:#081620;--surface:#0F2230;--sunk:#0B1B26;--ink:#E6F0F3;--muted:#9DB0BF;--line:#21394A;
+  --ok:#5DD39E;--ok-soft:#12301F;--warn:#FDB022;--warn-soft:#3A2A0A;--lost:#FF8A80;--lost-soft:#3B1714;
+  --shadow:0 6px 24px rgba(0,0,0,.35);
+}}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;margin:0}
+a{color:var(--brand)}
+[hidden]{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:14px;border:0;background:var(--brand);color:var(--brand-ink);font:700 16px var(--f-body);cursor:pointer;text-decoration:none}
+.btn.sec{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.btn.lost{background:var(--lost);color:#fff}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:20px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input,.field select,.field textarea{min-height:48px;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;font:inherit;background:var(--surface);color:var(--ink)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:13px;font-weight:800}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.lost{background:var(--lost-soft);color:var(--lost)}
+.muted{color:var(--muted)}
