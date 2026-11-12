@@ -306,6 +306,20 @@ begin
   assert (select distrito_perdida from public.mascotas_publico where pet_id = 'PE-00000125') = 'Barranco', 'reporte activo más reciente (0008)';
 end $$;
 
+-- 0009: el propietario guarda y cambia su correo; un correo inválido se rechaza
+do $$ begin
+  assert (select correo from public.perfiles where id = '0a000000-0000-4000-8000-000000000001') = 'ana.perez@example.com', 'seed con correo (0009)';
+  begin update public.perfiles set correo = 'no-es-correo' where id = '0a000000-0000-4000-8000-000000000001'; raise exception 'correo inválido aceptado';
+  exception when check_violation then null; end;
+end $$;
+set local role authenticated;
+set local request.jwt.claims to '{"role":"authenticated","sub":"0a000000-0000-4000-8000-000000000001"}';
+update public.perfiles set correo = 'ana2@example.com' where id = '0a000000-0000-4000-8000-000000000001';
+reset role;
+do $$ begin
+  assert (select correo from public.perfiles where id = '0a000000-0000-4000-8000-000000000001') = 'ana2@example.com', 'propietaria cambia su correo (0009)';
+end $$;
+
 \echo 'Todas las pruebas de acceso pasaron.'
 rollback;
 

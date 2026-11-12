@@ -11,6 +11,7 @@ export interface Perfil {
   tipo_documento: "DNI" | "CE" | "PAS";
   numero_documento: string;
   celular: string;
+  correo: string | null;
   celular_verificado: boolean;
   departamento: string;
   provincia: string;
@@ -43,7 +44,7 @@ export function demoInicial(): DemoDatos {
   return {
     perfil: {
       id: DEMO_USUARIO, nombres: "Ana", apellidos: "Pérez", tipo_documento: "DNI", numero_documento: "45678912",
-      celular: "987654321", celular_verificado: true, departamento: "Lima", provincia: "Lima", distrito: "Miraflores",
+      celular: "987654321", correo: "ana.perez@example.com", celular_verificado: true, departamento: "Lima", provincia: "Lima", distrito: "Miraflores",
     },
     mascotas: [
       {

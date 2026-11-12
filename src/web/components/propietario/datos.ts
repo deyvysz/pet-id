@@ -129,7 +129,7 @@ export async function obtenerPerfil(): Promise<Perfil | null> {
   return data as Perfil | null;
 }
 
-export async function actualizarPerfil(c: Pick<Perfil, "nombres" | "apellidos" | "departamento" | "provincia" | "distrito">) {
+export async function actualizarPerfil(c: Pick<Perfil, "nombres" | "apellidos" | "correo" | "departamento" | "provincia" | "distrito">) {
   if (modo() === "demo") { await espera(); Object.assign(D().perfil, c); guardarDemo(); return; }
   const id = await usuarioActual();
   const { error } = await sb().from("perfiles").update(c).eq("id", id);

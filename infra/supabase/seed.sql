@@ -56,6 +56,7 @@ on conflict (id) do nothing;
 update perfiles set celular_verificado = true
 where id in ('0a000000-0000-4000-8000-000000000001', '0a000000-0000-4000-8000-000000000002');
 update perfiles set rol = 'admin' where id = '0a000000-0000-4000-8000-000000000002';
+update perfiles set correo = 'ana.perez@example.com' where id = '0a000000-0000-4000-8000-000000000001';
 
 -- Mascotas (pet_id fijo para coincidir con el prototipo; el trigger crea historial y certificado).
 insert into mascotas (id, pet_id, propietario_id, nombre, especie, raza, sexo, fecha_nacimiento,

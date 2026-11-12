@@ -104,7 +104,7 @@ export default function Reportar() {
                   <div className={s.wide}><dt>Mensaje para quien {ella ? "la" : "lo"} encuentre</dt><dd>{rep.mensaje ?? "Sin mensaje"}</dd></div>
                 </dl>
                 <p className={s.muted}>La página pública de {m.nombre} muestra el aviso y el distrito.
-                  {m.lista_para_busqueda ? ` ${m.nombre} aparece en la búsqueda por foto de la zona.` : ""} Si alguien te escribe, el mensaje te llega por correo y SMS.</p>
+                  {m.lista_para_busqueda ? ` ${m.nombre} aparece en la búsqueda por foto de la zona.` : ""} Si alguien te escribe, el mensaje te llega a tu correo.</p>
                 <Link className={cx(s.btn, s.sec)} href={`/m/${m.pet_id}`}>Ver la página pública</Link>
                 {error && <p className={s.err} role="alert">{error}</p>}
                 <div className={s.spacer} />

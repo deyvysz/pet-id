@@ -12,7 +12,7 @@ type Doc = Perfil["tipo_documento"];
 export default function CrearCuenta() {
   const router = useRouter();
   const [f, setF] = useState({
-    nombres: "", apellidos: "", tipo_documento: "DNI" as Doc, numero_documento: "", celular: "",
+    nombres: "", apellidos: "", tipo_documento: "DNI" as Doc, numero_documento: "", celular: "", correo: "",
     departamento: "Lima", provincia: "Lima", distrito: "Miraflores",
   });
   const [terminos, setTerminos] = useState(false);
@@ -39,6 +39,7 @@ export default function CrearCuenta() {
     if (f.tipo_documento === "DNI" && !/^\d{8}$/.test(doc)) return "El DNI tiene 8 dígitos.";
     if (f.tipo_documento !== "DNI" && !/^[A-Za-z0-9]{6,12}$/.test(doc)) return "Revisa el número de documento (6 a 12 letras o números).";
     if (!/^9\d{8}$/.test(f.celular.replace(/\D/g, ""))) return "Escribe tu celular de 9 dígitos (empieza con 9).";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.correo.trim())) return "Escribe un correo válido: ahí te avisamos si alguien encuentra a tu mascota.";
     if (!f.provincia.trim() || !f.distrito.trim()) return "Completa tu provincia y distrito.";
     if (!terminos || !privacidad) return "Para crear la cuenta debes aceptar los términos y la política de privacidad.";
     return "";
@@ -54,7 +55,7 @@ export default function CrearCuenta() {
       await enviarCodigo(celular, true);
       guardarPendiente({
         celular, modo: "registro",
-        perfil: { ...f, nombres: f.nombres.trim(), apellidos: f.apellidos.trim(), numero_documento: f.numero_documento.trim().toUpperCase(), celular },
+        perfil: { ...f, nombres: f.nombres.trim(), apellidos: f.apellidos.trim(), numero_documento: f.numero_documento.trim().toUpperCase(), celular, correo: f.correo.trim().toLowerCase() },
       });
       router.push("/verificar");
     } catch (err) {
@@ -86,6 +87,10 @@ export default function CrearCuenta() {
             <input className={`${s.input} ${s.mono}`} id="u-cel" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={11} value={f.celular} onChange={set("celular")} placeholder="987 654 321" />
           </div>
           <span className={s.hint}>Te enviaremos un código por SMS para verificarlo.</span>
+        </div>
+        <div className={s.field}><label htmlFor="u-correo">Correo</label>
+          <input className={s.input} id="u-correo" type="email" autoComplete="email" maxLength={120} value={f.correo} onChange={set("correo")} placeholder="nombre@correo.com" />
+          <span className={s.hint}>Si alguien encuentra a tu mascota y te escribe, el aviso llega a este correo. No aparece en ninguna página pública.</span>
         </div>
         <div className={s.two}>
           <div className={s.field}><label htmlFor="u-dep">Departamento</label>

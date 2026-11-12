@@ -82,7 +82,7 @@ export default function MisMascotas() {
             <Link href="/perfil"><span>Suscripción</span><span>PET ID Free ›</span></Link>
             <button type="button" onClick={salir}><span>Cerrar sesión</span><span>›</span></button>
           </div>
-          <p className={cx(s.muted, s.center)}>Si alguien encuentra a tu mascota y te escribe desde su página, el mensaje te llega por correo y SMS.</p>
+          <p className={cx(s.muted, s.center)}>Si alguien encuentra a tu mascota y te escribe desde su página, el mensaje te llega a tu correo.</p>
         </main>
       )}</Estado>
     </>

@@ -92,8 +92,9 @@ export async function POST(req: Request) {
     }).select("id").single();
     if (ei) throw ei;
 
-    const { data: u } = await sb.auth.admin.getUserById(m.propietario_id);
-    const para = u?.user?.email;
+    // Decisión 010: el aviso va al correo registrado en el perfil del propietario.
+    const { data: prop } = await sb.from("perfiles").select("correo").eq("id", m.propietario_id).maybeSingle();
+    const para = (prop?.correo as string | null | undefined) ?? null;
     let enviado = false;
     if (para) {
       try { enviado = await enviarCorreo(para, m.nombre, entrada.pet_id, entrada); } catch (e) { console.error("[contacto] correo", e); }

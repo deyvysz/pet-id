@@ -8,7 +8,7 @@ import { Barra, Estado, cx, mensajeError, s, useCarga } from "@/components/propi
 
 function Formulario({ p }: { p: Perfil }) {
   const router = useRouter();
-  const [f, setF] = useState({ nombres: p.nombres, apellidos: p.apellidos, departamento: p.departamento, provincia: p.provincia, distrito: p.distrito });
+  const [f, setF] = useState({ nombres: p.nombres, apellidos: p.apellidos, correo: p.correo ?? "", departamento: p.departamento, provincia: p.provincia, distrito: p.distrito });
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
   const [enviando, setEnviando] = useState(false);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
@@ -21,8 +21,9 @@ function Formulario({ p }: { p: Perfil }) {
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     if (!f.nombres.trim() || !f.apellidos.trim() || !f.provincia.trim() || !f.distrito.trim()) { setMsg({ ok: false, t: "Completa todos los campos." }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.correo.trim())) { setMsg({ ok: false, t: "Escribe un correo válido: ahí te avisamos si alguien encuentra a tu mascota." }); return; }
     setEnviando(true); setMsg(null);
-    try { await actualizarPerfil({ ...f, nombres: f.nombres.trim(), apellidos: f.apellidos.trim() }); setMsg({ ok: true, t: "Cambios guardados." }); }
+    try { await actualizarPerfil({ ...f, nombres: f.nombres.trim(), apellidos: f.apellidos.trim(), correo: f.correo.trim().toLowerCase() }); setMsg({ ok: true, t: "Cambios guardados." }); }
     catch (err) { setMsg({ ok: false, t: mensajeError(err) }); }
     setEnviando(false);
   }
@@ -42,6 +43,9 @@ function Formulario({ p }: { p: Perfil }) {
         <div className={s.field}><label htmlFor="p-nom">Nombres</label><input className={s.input} id="p-nom" value={f.nombres} onChange={set("nombres")} /></div>
         <div className={s.field}><label htmlFor="p-ape">Apellidos</label><input className={s.input} id="p-ape" value={f.apellidos} onChange={set("apellidos")} /></div>
       </div>
+      <div className={s.field}><label htmlFor="p-correo">Correo para avisos</label>
+        <input className={s.input} id="p-correo" type="email" autoComplete="email" maxLength={120} value={f.correo} onChange={set("correo")} />
+        <span className={s.hint}>Aquí te llega el aviso si alguien encuentra a tu mascota.</span></div>
       <div className={s.two}>
         <div className={s.field}><label htmlFor="p-dep">Departamento</label>
           <select className={s.input} id="p-dep" value={f.departamento} onChange={(e) => {
