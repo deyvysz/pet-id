@@ -80,6 +80,12 @@ export async function POST(req: Request) {
     if (em) throw em;
     if (!m || m.estado === "fallecida") return error(404, "No hay una mascota con ese PET ID.");
 
+    // hallazgo_id llega del navegador: si no existe, la FK de mensajes_contacto haría fallar el envío.
+    if (entrada.hallazgo_id) {
+      const { data: h } = await sb.from("hallazgos").select("id").eq("id", entrada.hallazgo_id).maybeSingle();
+      if (!h) entrada.hallazgo_id = undefined;
+    }
+
     const { data: fila, error: ei } = await sb.from("mensajes_contacto").insert({
       mascota_id: m.id, hallazgo_id: entrada.hallazgo_id ?? null, nombre: entrada.nombre,
       celular: entrada.celular ?? null, correo: entrada.correo ?? null, mensaje: entrada.mensaje,
