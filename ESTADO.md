@@ -13,6 +13,7 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 - Reconocimiento: servicio FastAPI, worker de cola, script de evaluación; 48 pruebas pasan con modelos simulados.
 - Web: 27 rutas (propietario, pública, administración y API). tsc, lint y build pasan; en modo demo (`NEXT_PUBLIC_DEMO=1`) todas responden 200.
 - Decisiones 007, 008 y 009 con los ajustes de contrato de la integración.
+- Revisión independiente hecha: 6 fallas corregidas (migración 0008, middleware de sesión, ruta del certificado, QR con sesión, vista pública con un solo reporte, contacto con hallazgo inexistente).
 
 ## Siguiente
 
@@ -20,9 +21,10 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 2. Cargar las variables de `src/web/.env.example` y del servicio de reconocimiento.
 3. Desplegar el servicio de reconocimiento con los pesos reales (OWL-ViT y DINOv2) y probarlo con fotos reales.
 4. Reunir el conjunto de evaluación (50 mascotas, 3 fotos o más) y calibrar el umbral con `src/reconocimiento/eval/evaluar.py`.
-5. Revisión independiente de punta a punta.
 
 ## Pendiente de Deyvys
+
+- Canal para avisar al propietario cuando alguien encuentra su mascota. Hoy el ingreso es solo por celular, el propietario no tiene correo y el aviso no le llega: se guarda en `mensajes_contacto` sin notificar. Opciones: SMS con un proveedor de pago, o pedir correo en el registro.
 
 - Precio de Premium (la portada muestra S/ 9.90 como referencial).
 - Correo de contacto del pie de página.
@@ -30,6 +32,8 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 - Si la vista pública debe aceptar solo consultas por PET ID exacto (decisión 007).
 
 ## Riesgos abiertos
+
+- El servicio de reconocimiento no tiene autenticación: debe correr en red privada y con `URL_HOSTS_PERMITIDOS` fijado al dominio de Supabase.
 
 - Nada se ha probado aún contra Supabase real ni con los pesos reales del modelo.
 - Precisión del reconocimiento sin datos propios: se mide con Recall@1/5/10 antes de prometer porcentajes.
