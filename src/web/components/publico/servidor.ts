@@ -40,13 +40,13 @@ type FilaCert = {
   mascotas: { pet_id: string; nombre: string; especie: Especie; estado: EstadoMascota } | null;
 };
 
-/** Verifica un certificado. Usa la función verificar_certificado(p_codigo) si existe; si no, consulta las tablas. */
+/** Verifica un certificado. Usa la función verificar_certificado(codigo) si existe; si no, consulta las tablas. */
 export async function verificarCertificado(codigo: string): Promise<VerificacionCertificado> {
   if (esDemo()) return verificacionDemo(codigo);
   if (!hayBackend()) throw new SinBackend();
   const sb = supabaseServicio();
 
-  const rpc = await sb.rpc("verificar_certificado", { p_codigo: codigo });
+  const rpc = await sb.rpc("verificar_certificado", { codigo });
   if (!rpc.error) {
     const r = Array.isArray(rpc.data) ? rpc.data[0] : rpc.data;
     if (!r) return { valido: false, codigo };

@@ -21,6 +21,8 @@ export const MOTIVO_TXT: Record<MotivoRechazo, string> = {
   borrosa: "La foto está movida o desenfocada. Sostén el teléfono quieto y toca la pantalla sobre la mascota para enfocar.",
   oscura: "La foto está oscura. Tómala con luz de día y sin flash.",
   varias_mascotas: "Hay más de una mascota en la foto. Toma una foto solo de la que encontraste.",
+  pequena: "La foto es muy pequeña. Usa la cámara del teléfono y acércate a la mascota.",
+  error_proceso: "No pudimos procesar la foto. Inténtalo de nuevo en unos minutos.",
 };
 
 /** "perdido" o "perdida" según el sexo. */

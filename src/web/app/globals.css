@@ -4,8 +4,6 @@
   --bg:#EEF6F5;--surface:#FFFFFF;--sunk:#F2F8F7;--ink:#0A2346;--muted:#4D5E74;--line:#D3E3E1;
   --ok:#12795A;--ok-soft:#E1F4EC;--warn:#9A4A06;--warn-soft:#FEF0C7;--lost:#B42318;--lost-soft:#FDECEA;
   --r:16px;--shadow:0 6px 24px rgba(10,35,70,.08);
-  --f-display:var(--font-poppins),"Segoe UI",system-ui,sans-serif;
-  --f-body:var(--font-nunito),system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root{
@@ -16,6 +14,8 @@
 }}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+/* next/font define --font-poppins y --font-nunito en <body>; por eso las familias se declaran aquí y no en :root */
+body{--f-display:var(--font-poppins),"Segoe UI",system-ui,sans-serif;--f-body:var(--font-nunito),system-ui,-apple-system,"Segoe UI",sans-serif}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--f-display);line-height:1.15;margin:0}
 a{color:var(--brand)}
