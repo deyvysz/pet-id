@@ -74,7 +74,7 @@ async function base(d: DatosDocumento) {
 }
 
 function resumenSalud(s: RegistroSalud[]): string[] {
-  return s.slice(0, 6).map((e) => `${tituloSalud(e)}: ${fecha(e.fecha)}${e.proxima_fecha ? `, próxima ${fecha(e.proxima_fecha)}` : ""}.`);
+  return s.slice(0, 4).map((e) => `${tituloSalud(e)}: ${fecha(e.fecha)}${e.proxima_fecha ? `, próxima ${fecha(e.proxima_fecha)}` : ""}.`);
 }
 
 /** Certificado de Registro e Identificación PET ID (A4). */
@@ -98,7 +98,7 @@ export async function pdfCertificado(d: DatosDocumento, sitio: string): Promise<
   y = parrafo(pg, `${m.nombre}, ${esp} ${sx}, quedó ${m.sexo === "hembra" ? "inscrita" : "inscrito"} en PET ID el ${fecha(m.creado_at)} a nombre de ${d.perfil.nombres} ${d.perfil.apellidos}.`, X, y, f.r, 12, ancho - 170);
 
   // Foto a la derecha
-  const fw = 140, fh = 180, fx = W - X - fw, fy = 841.89 - 140 - fh + 10;
+  const fw = 120, fh = 150, fx = W - X - fw, fy = 841.89 - 140 - fh + 10;
   dibujarFoto(pg, img, fx, fy, fw, fh);
 
   y = Math.min(y - 14, fy - 24);
@@ -111,7 +111,7 @@ export async function pdfCertificado(d: DatosDocumento, sitio: string): Promise<
   for (const [k, v] of filas) {
     pg.drawLine({ start: { x: X, y: y + 14 }, end: { x: W - X, y: y + 14 }, thickness: 0.6, color: C.line });
     pg.drawText(limpio(k), { x: X, y, size: 10, font: f.b, color: C.muted });
-    y = parrafo(pg, v, X + 150, y, f.r, 11, ancho - 150) - 8;
+    y = parrafo(pg, v, X + 150, y, f.r, 11, ancho - 150) - 6;
   }
 
   y -= 10;
@@ -123,7 +123,7 @@ export async function pdfCertificado(d: DatosDocumento, sitio: string): Promise<
 
   // Caja de verificación
   const urlVer = `${sitio}/verificar-certificado/${d.certificado.codigo}`;
-  const by = 120, bh = 120;
+  const bh = 116, by = Math.min(120, y - bh - 12);
   pg.drawRectangle({ x: X, y: by, width: ancho, height: bh, color: C.sunk, borderColor: C.line, borderWidth: 1 });
   dibujarQr(pg, urlVer, W - X - 104, by + 8, 104);
   pg.drawText(limpio("Código de verificación"), { x: X + 16, y: by + bh - 26, size: 10, font: f.b, color: C.muted });
@@ -131,8 +131,8 @@ export async function pdfCertificado(d: DatosDocumento, sitio: string): Promise<
   pg.drawText(limpio(`Emitido el ${fecha(d.certificado.emitido_at)}`), { x: X + 16, y: by + bh - 70, size: 11, font: f.r, color: C.ink });
   parrafo(pg, `Verifícalo en ${urlVer} o escanea el código QR.`, X + 16, by + 26, f.r, 9.5, ancho - 140, C.muted);
 
-  parrafo(pg, LEYENDA_CERT, X, 92, f.r, 9.5, ancho, C.muted);
-  parrafo(pg, "Los datos de salud los registra el propietario y no han sido validados por una veterinaria.", X, 66, f.r, 9.5, ancho, C.muted);
+  parrafo(pg, LEYENDA_CERT, X, by - 26, f.r, 9.5, ancho, C.muted);
+  parrafo(pg, "Los datos de salud los registra el propietario y no han sido validados por una veterinaria.", X, by - 52, f.r, 9.5, ancho, C.muted);
   return doc.save();
 }
 

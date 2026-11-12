@@ -111,7 +111,7 @@ export default function Fotos() {
         const marcas = valida("marcas");
         const etiqueta = rd < total ? "Incompleto" : marcas ? "Completo" : "Mínimo completo";
         const texto = rd < total
-          ? `Faltan ${total - rd} ${total - rd === 1 ? "foto obligatoria" : "fotos obligatorias"}. Sin ellas, ${m.nombre} no aparece en la búsqueda por foto.`
+          ? `${total - rd === 1 ? "Falta 1 foto obligatoria" : `Faltan ${total - rd} fotos obligatorias`}. Sin ellas, ${m.nombre} no aparece en la búsqueda por foto.`
           : m.lista_para_busqueda
             ? `${m.nombre} ya aparece en la búsqueda por foto.`
             : `Tienes las fotos obligatorias. ${m.nombre} entra en la búsqueda por foto cuando terminemos de procesarlas.`;

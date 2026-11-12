@@ -119,7 +119,7 @@ textarea.input{min-height:96px;resize:vertical}
 .shot.lost{border-color:var(--lost)}
 .shotHead{display:flex;gap:12px;align-items:flex-start}
 .shotIc{width:56px;height:56px;flex:none;border-radius:12px;background:var(--sunk);display:grid;place-items:center;color:var(--ink)}
-.shotHead>div{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.shotHead>div:last-child{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
 .shotTitle{font-weight:700;font-size:17px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .shotThumb{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--sunk);position:relative}
 .shotThumb img{width:100%;height:100%;object-fit:cover;display:block}

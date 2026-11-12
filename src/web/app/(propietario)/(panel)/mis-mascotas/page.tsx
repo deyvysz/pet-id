@@ -5,7 +5,7 @@ import { FOTOS_OBLIGATORIAS } from "@/lib/contratos";
 import {
   cerrarSesion, listarMascotas, listarSalud, obtenerPerfil, type MascotaVista, type RegistroSaludVista,
 } from "@/components/propietario/datos";
-import { ESPECIE_TXT, ESTADO_CHIP, ESTADO_TXT, estadoProxima, fecha } from "@/components/propietario/textos";
+import { ESPECIE_TXT, ESTADO_CHIP, ESTADO_TXT, estadoProxima, fecha, tituloSalud } from "@/components/propietario/textos";
 import { Estado, FotoMascota, Logo, cx, s, useCarga } from "@/components/propietario/ui";
 
 function proximo(salud: RegistroSaludVista[]) {
@@ -40,7 +40,7 @@ function Tarjeta({ m, salud }: { m: MascotaVista; salud: RegistroSaludVista[] })
             : <span className={s.chip}>Fotos en revisión</span>}
       </div>
       {n && (
-        <p className={s.muted}>Próximo en salud: {n.nombre}, {fecha(n.proxima_fecha)}{" "}
+        <p className={s.muted}>Próximo en salud: {tituloSalud(n)}, {fecha(n.proxima_fecha)}{" "}
           <span className={cx(s.chip, s[estadoProxima(n.proxima_fecha).cls])}>{estadoProxima(n.proxima_fecha).t}</span></p>
       )}
       <div className={s.btnRow}>
