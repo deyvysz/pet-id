@@ -1,0 +1,16 @@
+/* Panel de administración: menú en pestañas en celular (en escritorio se usa .side de publico.css). */
+.pub .admin-tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 16px 0;max-width:1200px;margin:0 auto;width:100%}
+.pub .admin-tabs a{flex:none;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:700 14px var(--f-body);text-decoration:none}
+.pub .admin-tabs a.on{background:var(--accent-soft);color:var(--brand);border-color:transparent}
+@media (min-width:900px){.pub .admin-tabs{display:none}}
+.pub .admin-filtros{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+.pub .admin-filtros input,.pub .admin-filtros select{min-height:44px;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;font:inherit;background:var(--surface);color:var(--ink)}
+.pub .admin-filtros input{flex:1;min-width:180px}
+.pub .ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 18px}
+.pub .ficha dt{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+.pub .ficha dd{margin:2px 0 0;overflow-wrap:anywhere}
+.pub .admin-seccion{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.pub .admin-seccion h2{font-size:18px}
+.pub .admin-cabecera{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.pub .admin-cabecera img{width:88px;height:88px;border-radius:16px;object-fit:cover}
+.pub .admin-vacio{width:88px;height:88px;border-radius:16px;background:var(--accent-soft);display:grid;place-items:center;color:var(--brand)}
