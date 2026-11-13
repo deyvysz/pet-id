@@ -6,6 +6,8 @@
 #   scripts/local.sh iniciar         arranca web (3000), reconocimiento (8000) y worker de fotos
 #   scripts/local.sh detener         detiene los procesos y Supabase
 #   scripts/local.sh reiniciar-bd    borra la base local y vuelve a aplicar migraciones y seed
+#   scripts/local.sh reprocesar-fotos  borra los vectores y vuelve a encolar todas las fotos de mascotas
+#                                    (necesario al pasar del modelo simulado al real: sus vectores no son comparables)
 set -euo pipefail
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 SUPA="npx -y supabase@2.48.3"
@@ -63,6 +65,8 @@ preparar() {
   python3 -m venv .venv
   .venv/bin/pip install -q --upgrade pip
   if [ "${1:-}" = "--modelo-real" ]; then
+    # torch para CPU desde el índice de PyTorch: la rueda de PyPI trae CUDA y pesa varios GB más.
+    .venv/bin/pip install -q torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
     .venv/bin/pip install -q -r requirements.txt && touch .modelo-real
   else
     .venv/bin/pip install -q -r requirements-pruebas.txt && rm -f .modelo-real
@@ -115,5 +119,17 @@ case "${1:-}" in
   iniciar) iniciar ;;
   detener) detener ;;
   reiniciar-bd) cd "$RAIZ/infra" && $SUPA db reset ;;
-  *) sed -n 2,8p "$0"; exit 1 ;;
+  reprocesar-fotos)
+    docker exec -i supabase_db_pet-id psql -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+begin;
+delete from public.vectores_foto;
+update public.fotos set estado = 'pendiente', motivo_rechazo = null, calidad = null where mascota_id is not null;
+select count(*) as fotos_encoladas from (
+  select pgmq.send('fotos_por_procesar', jsonb_build_object('foto_id', id, 'mascota_id', mascota_id, 'tipo', tipo, 'ruta_storage', ruta_storage))
+  from public.fotos where mascota_id is not null
+) s;
+commit;
+SQL
+    echo "Fotos encoladas. El worker las procesa con el modelo configurado (ver .local-logs/worker.log)." ;;
+  *) sed -n 2,10p "$0"; exit 1 ;;
 esac
