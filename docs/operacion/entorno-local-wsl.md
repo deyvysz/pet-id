@@ -6,7 +6,7 @@ Levanta todo PET ID en la máquina de desarrollo: Supabase local (base de datos,
 
 ## 1. Requisitos en Windows
 
-- WSL 2 con la distribución `PetId`. Si aún no existe, en PowerShell: `wsl --install Ubuntu-24.04 --name PetId`.
+- WSL 2 con una distribución propia para el proyecto, `PetId`, separada de la de Guerrero Productions. En PowerShell: `wsl --install Ubuntu-24.04 --name PetId`.
 - Docker Desktop, con Settings > Resources > WSL integration activado para `PetId`. Otra opción es instalar Docker Engine dentro de la distribución.
 - Unos 10 GB libres: las imágenes de Supabase ocupan entre 4 y 5 GB, y el modelo real otros 3 GB si se instala.
 
@@ -23,10 +23,10 @@ source ~/.bashrc && nvm install 22
 sudo apt install -y gh && gh auth login
 ```
 
-Clonar dentro del sistema de archivos de Linux (no en `/mnt/c`, que es varias veces más lento):
+Clonar en `~/petid-infra`, dentro del sistema de archivos de Linux (no en `/mnt/c`, que es varias veces más lento):
 
 ```bash
-cd ~ && gh repo clone deyvysz/pet-id && cd pet-id
+gh repo clone deyvysz/pet-id ~/petid-infra && cd ~/petid-infra
 ```
 
 ## 3. Levantar
