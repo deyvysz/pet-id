@@ -32,6 +32,7 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 - Correo de contacto del pie de página.
 - Textos legales: términos, privacidad, libro de reclamaciones.
 - Si la vista pública debe aceptar solo consultas por PET ID exacto (decisión 007).
+- Confirmar con el cliente qué significa "Face ID": escaneo guiado de la mascota con cámara o ingreso del dueño con biometría (passkeys). En espera; no se trabaja hasta confirmar.
 
 ## Riesgos abiertos
 
