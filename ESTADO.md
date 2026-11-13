@@ -13,6 +13,7 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 - Reconocimiento: servicio FastAPI, worker de cola, script de evaluación; 48 pruebas pasan con modelos simulados.
 - Web: 27 rutas (propietario, pública, administración y API). tsc, lint y build pasan; en modo demo (`NEXT_PUBLIC_DEMO=1`) todas responden 200.
 - Decisiones 007, 008 y 009 con los ajustes de contrato de la integración.
+- Entorno local levantado en WSL (distribución PetId, carpeta ~/petid-infra) el 12 de noviembre de 2026: Supabase local, web y reconocimiento con modelo simulado; ingreso por celular con código de prueba funciona.
 - Aviso al propietario por correo (decisión 010).
 - Revisión independiente hecha: 6 fallas corregidas (migración 0008, middleware de sesión, ruta del certificado, QR con sesión, vista pública con un solo reporte, contacto con hallazgo inexistente).
 
