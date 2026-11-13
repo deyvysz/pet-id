@@ -55,7 +55,7 @@ ENV
 preparar() {
   comprobar
   echo "1/4 Supabase local (la primera vez descarga imágenes de Docker; tarda unos minutos)"
-  cd "$RAIZ/infra" && $SUPA start
+  cd "$RAIZ/infra" && { $SUPA start || { echo "Supabase no arrancó; reintento una vez limpiando contenedores."; $SUPA stop --no-backup >/dev/null 2>&1 || true; $SUPA start; }; }
   echo "2/4 Dependencias de la web"
   cd "$RAIZ/src/web" && npm ci
   echo "3/4 Servicio de reconocimiento"
