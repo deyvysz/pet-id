@@ -8,16 +8,18 @@ import {
   type MascotaVista, type ReporteNuevo,
 } from "@/components/propietario/datos";
 import { fecha, hoyISO } from "@/components/propietario/textos";
-import { DISTRITOS_LIMA_CALLAO } from "@/components/propietario/ubigeo";
+import { SelectorUbigeo } from "@/components/comun/SelectorUbigeo";
+import { ubicacionDe, codigoDe, type Ubicacion } from "@/lib/ubigeo";
 import { Barra, Estado, cx, mensajeError, s, useCarga } from "@/components/propietario/ui";
 
 const hora = (iso: string) => new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Lima" });
 const fechaLima = (iso: string) => new Date(iso).toLocaleDateString("en-CA", { timeZone: "America/Lima" });
 
-function Formulario({ m, inicial, alGuardar }: { m: MascotaVista; inicial: ReporteNuevo; alGuardar: () => void }) {
+function Formulario({ m, inicial, ubicacionInicial, alGuardar }: { m: MascotaVista; inicial: ReporteNuevo; ubicacionInicial: Ubicacion | null; alGuardar: () => void }) {
+  const [ubic, setUbic] = useState<Ubicacion | null>(ubicacionInicial);
   const [f, setF] = useState({
     fecha: fechaLima(inicial.fecha_perdida), hora: hora(inicial.fecha_perdida),
-    distrito: inicial.distrito, referencia: inicial.referencia ?? "", mensaje: inicial.mensaje ?? "",
+    referencia: inicial.referencia ?? "", mensaje: inicial.mensaje ?? "",
   });
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -28,11 +30,12 @@ function Formulario({ m, inicial, alGuardar }: { m: MascotaVista; inicial: Repor
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     if (!f.fecha || f.fecha > hoyISO()) return setError("Indica una fecha válida (hoy o antes).");
-    if (!f.distrito.trim()) return setError("Indica el distrito donde se perdió.");
+    const codigo = ubic ? codigoDe(ubic) : null;
+    if (!ubic || !codigo) return setError("Elige el departamento, la provincia y el distrito donde se perdió.");
     setError(""); setEnviando(true);
     try {
       await reportarPerdida(m.id, {
-        fecha_perdida: `${f.fecha}T${f.hora || "12:00"}:00-05:00`, distrito: f.distrito.trim(),
+        fecha_perdida: `${f.fecha}T${f.hora || "12:00"}:00-05:00`, distrito: ubic.distrito, ubigeo: codigo,
         referencia: f.referencia.trim() || null, mensaje: f.mensaje.trim() || null,
       });
       alGuardar();
@@ -46,10 +49,8 @@ function Formulario({ m, inicial, alGuardar }: { m: MascotaVista; inicial: Repor
         <div className={cx(s.note, s.warn)}><b>Sin búsqueda por foto</b>{m.nombre} no tiene las fotos obligatorias, así que no aparecerá cuando alguien busque por foto.
           <Link className={cx(s.btn, s.sec, s.small)} href={`/mascotas/${m.id}/fotos`} style={{ marginTop: 8 }}>Completar fotos</Link></div>
       )}
-      <div className={s.field}><label htmlFor="r-dist">¿En qué distrito se perdió?</label>
-        <input className={s.input} id="r-dist" list="r-distritos" value={f.distrito} onChange={set("distrito")} />
-        <datalist id="r-distritos">{DISTRITOS_LIMA_CALLAO.map((d) => <option key={d} value={d} />)}</datalist>
-      </div>
+      <SelectorUbigeo id="r-ubi" valor={ubic} alCambiar={(u) => setUbic(u)} etiquetaDistrito="¿En qué distrito se perdió?"
+        claseCampo={s.field} claseControl={s.input} claseFila={s.two} />
       <div className={s.two}>
         <div className={s.field}><label htmlFor="r-fecha">Fecha</label><input className={s.input} type="date" id="r-fecha" max={hoyISO()} value={f.fecha} onChange={set("fecha")} /></div>
         <div className={s.field}><label htmlFor="r-hora">Hora aprox.</label><input className={s.input} type="time" id="r-hora" value={f.hora} onChange={set("hora")} /></div>
@@ -121,7 +122,11 @@ export default function Reportar() {
                 Marcaste a {m.nombre} como {ella ? "encontrada" : "encontrado"}. Si vuelve a perderse, repórtalo aquí.</div>
             )}
             <Formulario m={m} alGuardar={() => { setEditando(false); recargar(); }}
-              inicial={rep ?? { fecha_perdida: new Date().toISOString(), distrito: perfil?.distrito ?? "", referencia: null, mensaje: null }} />
+              inicial={rep ?? { fecha_perdida: new Date().toISOString(), distrito: perfil?.distrito ?? "", referencia: null, mensaje: null }}
+              ubicacionInicial={
+                (rep && (ubicacionDe(rep.ubigeo) ?? null)) ??
+                (perfil ? { departamento: perfil.departamento, provincia: perfil.provincia, distrito: perfil.distrito } : null)
+              } />
           </>
         );
       }}</Estado>

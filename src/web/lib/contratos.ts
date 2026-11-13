@@ -56,6 +56,8 @@ export interface RegistroSalud {
 }
 
 export interface ReportePerdida {
+  /** Código INEI del distrito (migración 0010). */
+  ubigeo?: string | null;
   id: string;
   mascota_id: string;
   fecha_perdida: string;

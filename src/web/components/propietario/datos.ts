@@ -298,7 +298,7 @@ export async function reporteActivo(mascotaId: string): Promise<ReportePerdida |
   return data as ReportePerdida | null;
 }
 
-export interface ReporteNuevo { fecha_perdida: string; distrito: string; referencia: string | null; mensaje: string | null }
+export interface ReporteNuevo { fecha_perdida: string; distrito: string; ubigeo?: string | null; referencia: string | null; mensaje: string | null }
 
 export async function reportarPerdida(mascotaId: string, n: ReporteNuevo): Promise<void> {
   const previo = await reporteActivo(mascotaId);

@@ -1,5 +1,6 @@
 // POST /api/v1/hallazgos (multipart): foto del hallazgo + especie, distrito, color y contacto opcionales.
 // Guarda el hallazgo y la foto, pide los vectores al servicio de reconocimiento, busca parecidos y responde HallazgoRespuesta.
+import { esCodigoValido, ubicacionDe } from "@/lib/ubigeo";
 import {
   UMBRAL_CANDIDATO, type Candidato, type EmbedEntrada, type EmbedSalida, type Especie, type EstadoMascota,
   type HallazgoRespuesta, type SearchEntrada, type SearchSalida,
@@ -43,7 +44,10 @@ export async function POST(req: Request) {
 
   const especieIn = texto(fd.get("especie"), 10);
   const especie: Especie | null = especieIn === "perro" || especieIn === "gato" ? especieIn : null;
-  const distrito = texto(fd.get("distrito"), 60) || null;
+  // Decisión 012: el distrito llega como código INEI; el nombre se toma del ubigeo.
+  const ubigeoIn = texto(fd.get("ubigeo"), 6);
+  const ubigeo = /^\d{6}$/.test(ubigeoIn) && esCodigoValido(ubigeoIn) ? ubigeoIn : null;
+  const distrito = ubicacionDe(ubigeo)?.distrito ?? null;
   const color = texto(fd.get("color"), 40) || null;
   const nombre = texto(fd.get("nombre"), 80) || null;
   const celular = texto(fd.get("celular"), 20) || null;
@@ -64,7 +68,7 @@ export async function POST(req: Request) {
   const sb = supabaseServicio();
   try {
     const { data: h, error: eh } = await sb.from("hallazgos")
-      .insert({ especie, distrito, color, nombre_contacto: nombre, celular_contacto: celular, correo_contacto: correo })
+      .insert({ especie, ubigeo, color, nombre_contacto: nombre, celular_contacto: celular, correo_contacto: correo })
       .select("id").single();
     if (eh) throw eh;
     const hallazgoId: string = h.id;

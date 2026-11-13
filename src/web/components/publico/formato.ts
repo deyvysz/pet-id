@@ -1,10 +1,6 @@
 // Formatos y listas compartidas por las pantallas públicas (sin dependencias de servidor).
 import type { Especie, EstadoMascota, MotivoRechazo, Sexo } from "@/lib/contratos";
 
-export const DISTRITOS = [
-  "Barranco", "Jesús María", "La Molina", "Lince", "Magdalena del Mar", "Miraflores", "Pueblo Libre",
-  "San Borja", "San Isidro", "San Miguel", "Santiago de Surco", "Surquillo",
-];
 export const COLORES = ["Marrón", "Negro", "Blanco", "Gris", "Atigrado", "Dorado o crema", "Manchado", "Otro"];
 
 export const ESPECIE_TXT: Record<Especie, string> = { perro: "Perro", gato: "Gato" };

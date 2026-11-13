@@ -7,7 +7,7 @@ begin;
 insert into auth.users (id, raw_user_meta_data) values
   ('0a000000-0000-4000-8000-000000000003',
    '{"nombres":"Beto","apellidos":"Ríos","tipo_documento":"dni","numero_documento":"11112222",
-     "celular":"911111111","departamento":"Lima","provincia":"Lima","distrito":"Surco",
+     "celular":"911111111","departamento":"Lima","provincia":"Lima","distrito":"Santiago de Surco",
      "acepta_terminos":true,"acepta_privacidad":true}');
 -- Usuario sin metadatos completos: no se crea perfil, pero el alta no falla.
 insert into auth.users (id, raw_user_meta_data) values ('0a000000-0000-4000-8000-000000000004', '{"nombres":"X"}');
@@ -180,7 +180,7 @@ begin
   exception when insufficient_privilege then null; end;
   begin insert into perfiles (id, nombres, apellidos, tipo_documento, numero_documento, celular, departamento,
                               provincia, distrito, acepta_terminos_at, acepta_privacidad_at)
-        values ('0a000000-0000-4000-8000-000000000004', 'X', 'X', 'DNI', '1', '1', 'L', 'L', 'L', now(), now());
+        values ('0a000000-0000-4000-8000-000000000004', 'X', 'X', 'DNI', '1', '1', 'Lima', 'Lima', 'Lima', now(), now());
         raise exception 'no debe crear perfiles de otro';
   exception when insufficient_privilege then null; end;
 end $$;
@@ -195,7 +195,7 @@ values ('0a000000-0000-4000-8000-000000000004', 'X', 'Y', 'CE', '000111', '92222
 do $$ begin
   begin insert into perfiles (id, nombres, apellidos, tipo_documento, numero_documento, celular, departamento,
                               provincia, distrito, acepta_terminos_at, acepta_privacidad_at, rol)
-        values ('0a000000-0000-4000-8000-000000000004', 'X', 'Y', 'CE', '9', '9', 'L', 'L', 'L', now(), now(), 'admin');
+        values ('0a000000-0000-4000-8000-000000000004', 'X', 'Y', 'CE', '9', '9', 'Lima', 'Lima', 'Lima', now(), now(), 'admin');
         raise exception 'no debe insertar rol';
   exception when insufficient_privilege then null; end;
 end $$;
@@ -318,6 +318,22 @@ update public.perfiles set correo = 'ana2@example.com' where id = '0a000000-0000
 reset role;
 do $$ begin
   assert (select correo from public.perfiles where id = '0a000000-0000-4000-8000-000000000001') = 'ana2@example.com', 'propietaria cambia su correo (0009)';
+end $$;
+
+-- 0010: ubicaciones validadas contra el ubigeo
+do $$ begin
+  begin
+    update public.perfiles set distrito = 'Chimbote' where id = '0a000000-0000-4000-8000-000000000001';
+    raise exception 'combinación Lima/Lima/Chimbote aceptada';
+  exception when check_violation then null; end;
+  begin
+    insert into public.hallazgos (especie, distrito) values ('perro', 'chimbote');
+    raise exception 'distrito en minúsculas aceptado';
+  exception when check_violation then null; end;
+  insert into public.hallazgos (especie, ubigeo) values ('perro', '021801');
+  assert (select distrito from public.hallazgos where ubigeo = '021801' limit 1) = 'Chimbote', 'distrito completado desde el ubigeo';
+  insert into public.hallazgos (especie, distrito) values ('perro', 'Surquillo');
+  assert (select ubigeo from public.hallazgos where distrito = 'Surquillo' limit 1) = '150141', 'ubigeo completado si el nombre es único';
 end $$;
 
 \echo 'Todas las pruebas de acceso pasaron.'

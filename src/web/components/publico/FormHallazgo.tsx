@@ -4,7 +4,9 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { HallazgoRespuesta } from "@/lib/contratos";
-import { COLORES, DISTRITOS, MOTIVO_TXT } from "./formato";
+import { COLORES, MOTIVO_TXT } from "./formato";
+import { SelectorUbigeo } from "@/components/comun/SelectorUbigeo";
+import type { Ubicacion } from "@/lib/ubigeo";
 import { guardarBusqueda, prepararFoto, type FotoPreparada } from "./foto";
 import { IcCamara } from "./iconos";
 
@@ -14,7 +16,9 @@ export default function FormHallazgo() {
   const [revisando, setRevisando] = useState(false);
   const [especie, setEspecie] = useState("");
   const [color, setColor] = useState("");
-  const [distrito, setDistrito] = useState("");
+  const [ubic, setUbic] = useState<Ubicacion | null>(null);
+  const [ubigeo, setUbigeo] = useState<string | null>(null);
+  const distrito = ubic?.distrito ?? "";
   const [contacto, setContacto] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [buscando, setBuscando] = useState(false);
@@ -40,7 +44,7 @@ export default function FormHallazgo() {
     const fd = new FormData();
     fd.append("foto", foto.archivo, "hallazgo.jpg");
     if (especie) fd.append("especie", especie);
-    if (distrito) fd.append("distrito", distrito);
+    if (ubigeo) fd.append("ubigeo", ubigeo);
     if (color) fd.append("color", color);
     if (c) fd.append(c.includes("@") ? "correo" : "celular", c);
 
@@ -99,20 +103,15 @@ export default function FormHallazgo() {
           ))}
         </div>
       </fieldset>
-      <div className="two">
-        <div className="field">
-          <label htmlFor="f-color">Color principal (opcional)</label>
-          <select className="input" id="f-color" value={color} onChange={(e) => setColor(e.target.value)}>
-            <option value="">No sé</option>{COLORES.map((c) => <option key={c}>{c}</option>)}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="f-district">¿Dónde está? (opcional)</label>
-          <select className="input" id="f-district" value={distrito} onChange={(e) => setDistrito(e.target.value)}>
-            <option value="">No sé</option>{DISTRITOS.map((d) => <option key={d}>{d}</option>)}
-          </select>
-        </div>
+      <div className="field">
+        <label htmlFor="f-color">Color principal (opcional)</label>
+        <select className="input" id="f-color" value={color} onChange={(e) => setColor(e.target.value)}>
+          <option value="">No sé</option>{COLORES.map((c) => <option key={c}>{c}</option>)}
+        </select>
       </div>
+      <p className="hint" style={{ margin: 0 }}>¿Dónde está? (opcional). Si eliges el distrito, primero buscamos mascotas perdidas en esa zona.</p>
+      <SelectorUbigeo id="f-ubi" valor={ubic} alCambiar={(u, c) => { setUbic(u); setUbigeo(c); }} opcional
+        etiquetaDistrito="Distrito" claseCampo="field" claseControl="input" claseFila="two" />
       <div className="field">
         <label htmlFor="f-contact">Tu teléfono o correo (opcional)</label>
         <input className="input" id="f-contact" maxLength={120} value={contacto} onChange={(e) => setContacto(e.target.value)} placeholder="Para que la familia te contacte" />

@@ -5,6 +5,7 @@
 #   scripts/local.sh preparar --modelo-real   igual, pero instala torch y transformers para OWL-ViT y DINOv2 (descarga grande)
 #   scripts/local.sh iniciar         arranca web (3000), reconocimiento (8000) y worker de fotos
 #   scripts/local.sh detener         detiene los procesos y Supabase
+#   scripts/local.sh migrar          aplica a la base local las migraciones nuevas, sin borrar datos
 #   scripts/local.sh reiniciar-bd    borra la base local y vuelve a aplicar migraciones y seed
 #   scripts/local.sh reprocesar-fotos  borra los vectores y vuelve a encolar todas las fotos de mascotas
 #                                    (necesario al pasar del modelo simulado al real: sus vectores no son comparables)
@@ -118,6 +119,7 @@ case "${1:-}" in
   preparar) preparar "${2:-}" ;;
   iniciar) iniciar ;;
   detener) detener ;;
+  migrar) cd "$RAIZ/infra" && $SUPA migration up ;;
   reiniciar-bd) cd "$RAIZ/infra" && $SUPA db reset ;;
   reprocesar-fotos)
     docker exec -i supabase_db_pet-id psql -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL'
@@ -131,5 +133,5 @@ select count(*) as fotos_encoladas from (
 commit;
 SQL
     echo "Fotos encoladas. El worker las procesa con el modelo configurado (ver .local-logs/worker.log)." ;;
-  *) sed -n 2,10p "$0"; exit 1 ;;
+  *) sed -n 2,11p "$0"; exit 1 ;;
 esac
