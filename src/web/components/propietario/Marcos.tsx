@@ -33,6 +33,7 @@ export function MarcoPanel({ children }: { children: ReactNode }) {
   const ruta = usePathname();
   const router = useRouter();
   const [nombre, setNombre] = useState("");
+  const [esAdmin, setEsAdmin] = useState(false);
   const [mascota, setMascota] = useState<MascotaVista | null>(null);
   const idMascota = (() => { const m = reMascota.exec(ruta); return m && m[1] !== "nueva" ? m[1] : null; })();
 
@@ -48,6 +49,7 @@ export function MarcoPanel({ children }: { children: ReactNode }) {
       if (!vivo) return;
       if (!p) { router.replace("/crear-cuenta"); return; }
       setNombre(`${p.nombres} ${p.apellidos}`);
+      setEsAdmin(p.rol === "admin");
     })();
     return () => { vivo = false; };
   }, [router]);
@@ -73,6 +75,7 @@ export function MarcoPanel({ children }: { children: ReactNode }) {
           {modo() === "demo" && <span className={s.demoTag}>Modo demo</span>}
           <nav className={s.siteNav} aria-label="Principal">
             <Link href="/mis-mascotas" className={on("/mis-mascotas")}>Mis mascotas</Link>
+            {esAdmin && <Link href="/admin">Administración</Link>}
             <Link href="/encontre">Buscar por foto</Link>
             <Link href="/">Ayuda</Link>
           </nav>
@@ -104,6 +107,7 @@ export function MarcoPanel({ children }: { children: ReactNode }) {
               <Link href="/mis-mascotas" className={on("/mis-mascotas")}><Huella size={20} />Mis mascotas</Link>
               <Link href="/mascotas/nueva" className={on("/mascotas/nueva")}><IcMas />Registrar mascota</Link>
               <Link href="/perfil" className={on("/perfil")}><IcUsuario />Mi perfil</Link>
+              {esAdmin && <Link href="/admin"><IcUsuario />Panel de administración</Link>}
             </nav>
           )}
           <div className={s.sidePlan}><span className={s.chip}>PET ID Free</span><span className={s.hint}>Los planes de pago llegan en la fase 2.</span></div>

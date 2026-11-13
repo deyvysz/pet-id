@@ -12,6 +12,8 @@ export interface Perfil {
   numero_documento: string;
   celular: string;
   correo: string | null;
+  /** Solo lectura: lo asigna la base de datos. */
+  rol?: "propietario" | "admin";
   celular_verificado: boolean;
   departamento: string;
   provincia: string;

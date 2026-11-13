@@ -105,7 +105,8 @@ export async function verificarCodigo(codigo: string): Promise<string> {
   }
   borrarPendiente();
   const perfil = await obtenerPerfil();
-  return perfil ? "/mis-mascotas" : "/crear-cuenta";
+  if (!perfil) return "/crear-cuenta";
+  return perfil.rol === "admin" ? "/admin" : "/mis-mascotas";
 }
 
 /** Usuario de la sesión actual (null si no hay sesión). */
