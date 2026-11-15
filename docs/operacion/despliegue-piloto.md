@@ -4,7 +4,7 @@ Fecha: 15 de noviembre de 2026. Decisión 013. Sigue el manual de la plataforma 
 
 ## 0. Lo que hace falta
 
-- VPS en Contabo: Cloud VPS 20, US East, Ubuntu 24.04, usuario `admin` con tu llave ed25519 (creada en WSL, nunca en una carpeta sincronizada).
+- VPS en Contabo: Cloud VPS 4 (4 vCPU, 8 GB, 100 GB SSD), US East, Ubuntu 24.04, usuario `admin` con tu llave ed25519 (creada en WSL, nunca en una carpeta sincronizada).
 - Proyecto en Supabase Cloud, región East US (us-east-1).
 - Zona `petid.com.pe` en Cloudflare, con los DNS del registrador apuntando a Cloudflare.
 - En WSL (`PetId`): `sudo apt install -y pipx age wireguard-tools && pipx install --include-deps ansible && pipx inject ansible docker` y SOPS (binario de github.com/getsops/sops/releases).
@@ -86,6 +86,7 @@ Verificación:
 - `docker service ls` en el servidor muestra `petid_web`, `petid_reconocimiento` y `petid_worker` en 1/1.
 - `https://piloto.petid.com.pe` pide el correo (Access) y, tras el código, abre PET ID.
 - Segunda corrida completa de `site.yml`: `changed=0`.
+- Memoria: `docker stats --no-stream` con el piloto en uso. El reconocimiento y el worker deben quedar bajo su tope de 2,500 MB y `free -h` debe mostrar memoria disponible sin usar el intercambio de forma sostenida.
 
 ## 7. Prueba del piloto
 

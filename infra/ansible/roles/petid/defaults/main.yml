@@ -7,7 +7,10 @@ petid_imagen_web: "ghcr.io/deyvysz/pet-id-web"
 petid_imagen_reconocimiento: "ghcr.io/deyvysz/pet-id-reconocimiento"
 petid_stack_dir: /opt/petid/stacks/petid
 
-# Memoria. El modelo real (OWL-ViT + DINOv2) ocupa cerca de 1.5 GB por proceso.
+# Memoria, para un servidor de 8 GB (Contabo Cloud VPS 4). El modelo real
+# (OWL-ViT + DINOv2) se carga dos veces: en el reconocimiento y en el worker;
+# se estima entre 1.5 y 2 GB por proceso. Los topes suman 6 GB con Traefik y
+# dejan 2 GB al sistema. Medir con "docker stats" en el primer despliegue.
 petid_memoria_web: 768M
-petid_memoria_reconocimiento: 3G
-petid_memoria_worker: 3G
+petid_memoria_reconocimiento: 2500M
+petid_memoria_worker: 2500M

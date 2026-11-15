@@ -39,3 +39,36 @@
   community.general.timezone:
     name: "{{ timezone }}"
 
+
+# Intercambio de respaldo: el servidor tiene 8 GB y los modelos de reconocimiento
+# ocupan buena parte. Evita que el sistema mate procesos ante un pico corto.
+- name: Archivo de intercambio de 2 GB
+  ansible.builtin.shell: |
+    set -e
+    fallocate -l 2G /swapfile
+    chmod 600 /swapfile
+    mkswap /swapfile
+  args:
+    creates: /swapfile
+
+- name: Intercambio activo al arrancar
+  ansible.posix.mount:
+    path: none
+    src: /swapfile
+    fstype: swap
+    opts: sw
+    state: present
+
+- name: Activar el intercambio ahora
+  ansible.builtin.command: swapon /swapfile
+  register: base_swapon
+  changed_when: base_swapon.rc == 0
+  failed_when: false
+  when: ansible_facts['swaptotal_mb'] | default(0) | int == 0
+
+- name: Usar el intercambio solo cuando falte memoria
+  ansible.posix.sysctl:
+    name: vm.swappiness
+    value: "10"
+    sysctl_file: /etc/sysctl.d/99-petid.conf
+    reload: true
