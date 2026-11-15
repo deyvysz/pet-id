@@ -1,0 +1,56 @@
+---
+# Configuracion completa del servidor del piloto. Cada parte tiene su etiqueta
+# para correrla por separado (--tags base, --tags firewall, ...). Ver
+# docs/operacion/despliegue-piloto.md.
+#
+# Orden: la VPN va antes del cortafuegos. El cortafuegos deja SSH solo por la
+# VPN; si se aplicara antes, Ansible perderia la conexion por la IP publica.
+
+- name: Base, SSH y VPN
+  hosts: piloto
+  become: true
+  roles:
+    - role: base
+      tags: [base]
+    - role: ssh
+      tags: [ssh]
+    - role: wireguard
+      tags: [wireguard]
+
+- name: Cortafuegos
+  hosts: piloto
+  become: true
+  roles:
+    - role: firewall
+      tags: [firewall]
+
+- name: Docker y Swarm
+  hosts: piloto
+  become: true
+  roles:
+    - role: docker
+      tags: [docker]
+    - role: swarm
+      tags: [swarm]
+  post_tasks:
+    - name: Etiquetas y redes overlay
+      ansible.builtin.include_role:
+        name: swarm
+        tasks_from: labels
+      tags: [swarm]
+
+- name: Traefik
+  hosts: piloto
+  become: true
+  roles:
+    - role: traefik
+      tags: [traefik]
+
+# PET ID: web, servicio de reconocimiento y worker de fotos. Necesita las
+# imagenes construidas por GitHub Actions (.github/workflows/imagenes.yml).
+- name: PET ID
+  hosts: swarm_managers[0]
+  become: true
+  roles:
+    - role: petid
+      tags: [petid]

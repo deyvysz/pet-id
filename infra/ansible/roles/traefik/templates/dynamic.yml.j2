@@ -1,0 +1,12 @@
+# Administrado por Ansible (pet-id, rol traefik).
+# Pieza 2: el certificado de origen de Cloudflare. Traefik lo presenta en toda
+# conexion al 443; Cloudflare lo valida porque esta en modo Completo (estricto).
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /run/secrets/origin_cert
+        keyFile: /run/secrets/origin_key
+  options:
+    default:
+      minVersion: VersionTLS12

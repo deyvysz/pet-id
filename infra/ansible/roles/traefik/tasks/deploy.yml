@@ -1,0 +1,72 @@
+---
+# Pieza 4: despliega Traefik desde el primer manager del swarm.
+#
+# Los secretos y configs de Swarm no se pueden modificar una vez creados. Por
+# eso su nombre lleva una huella de su contenido: si el certificado cambia, se
+# crea uno con nombre nuevo y el stack pasa a usarlo.
+- name: Nombres de secretos y configuracion, con huella del contenido
+  ansible.builtin.set_fact:
+    traefik_secret_cert_name: "origin_cert_{{ (secret_origin_cert | hash('sha256'))[:10] }}"
+    traefik_secret_key_name: "origin_key_{{ (secret_origin_key | hash('sha256'))[:10] }}"
+    traefik_config_name: "traefik_dynamic_{{ (lookup('ansible.builtin.template', 'dynamic.yml.j2') | hash('sha256'))[:10] }}"
+
+- name: Certificado de origen como secreto del swarm
+  community.docker.docker_secret:
+    name: "{{ traefik_secret_cert_name }}"
+    data: "{{ secret_origin_cert }}"
+    state: present
+  no_log: true
+
+- name: Llave del certificado como secreto del swarm
+  community.docker.docker_secret:
+    name: "{{ traefik_secret_key_name }}"
+    data: "{{ secret_origin_key }}"
+    state: present
+  no_log: true
+
+- name: Configuracion del certificado para Traefik
+  community.docker.docker_config:
+    name: "{{ traefik_config_name }}"
+    data: "{{ lookup('ansible.builtin.template', 'dynamic.yml.j2') }}"
+    state: present
+
+- name: Carpeta del stack
+  ansible.builtin.file:
+    path: "{{ traefik_stack_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Archivo del stack
+  ansible.builtin.template:
+    src: stack.yml.j2
+    dest: "{{ traefik_stack_dir }}/stack.yml"
+    owner: root
+    group: root
+    mode: "0640"
+  register: traefik_stack_file
+
+- name: Stacks que existen hoy
+  ansible.builtin.command: docker stack ls --format '{{ "{{" }}.Name{{ "}}" }}'
+  register: traefik_stacks
+  changed_when: false
+  check_mode: false
+
+- name: Desplegar el stack
+  ansible.builtin.command: >-
+    docker stack deploy --detach=true --prune --resolve-image=changed
+    --compose-file {{ traefik_stack_dir }}/stack.yml traefik
+  when: traefik_stack_file.changed or 'traefik' not in traefik_stacks.stdout_lines
+  changed_when: true
+
+- name: Esperar a que Traefik este corriendo
+  ansible.builtin.command: >-
+    docker service ls --filter name=traefik_traefik
+    --format '{{ "{{" }}.Replicas{{ "}}" }}'
+  register: traefik_replicas
+  until: traefik_replicas.stdout == "1/1"
+  retries: 20
+  delay: 6
+  changed_when: false
+  when: not ansible_check_mode

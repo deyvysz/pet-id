@@ -1,0 +1,8 @@
+---
+# Aplica los cambios de pares sin bajar la interfaz: las conexiones que estan
+# pasando por la VPN (incluida la de Ansible) no se cortan.
+- name: Sincronizar pares de WireGuard
+  ansible.builtin.shell: wg syncconf {{ vpn_iface }} <(wg-quick strip {{ vpn_iface }})
+  args:
+    executable: /bin/bash
+  changed_when: true

@@ -1,0 +1,32 @@
+#!/usr/sbin/nft -f
+# Administrado por Ansible (pet-id, rol firewall). No editar a mano.
+#
+# Cortafuegos de entrada del servidor {{ inventory_hostname }}.
+# No usar "flush ruleset": borraria las reglas que crea Docker. Este archivo
+# borra y recrea solo su propia tabla.
+#
+# Los puertos que publica Docker (Traefik) no pasan por esta cadena sino por
+# FORWARD; su filtro va en la cadena DOCKER-USER (rol docker).
+
+table inet host
+delete table inet host
+
+table inet host {
+  chain input {
+    type filter hook input priority filter; policy drop;
+
+    ct state established,related accept
+    ct state invalid drop
+    iif "lo" accept
+
+    meta l4proto icmp accept
+    meta l4proto ipv6-icmp accept
+
+{% if inventory_hostname in groups['wireguard_servers'] %}
+
+    # VPN de administracion: SSH y todo lo demas de administracion entra solo por aqui.
+    iifname "{{ vpn_iface }}" ip saddr {{ vpn_cidr }} accept
+    udp dport {{ wireguard_port }} accept comment "WireGuard"
+{% endif %}
+  }
+}

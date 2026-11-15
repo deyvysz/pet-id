@@ -1,0 +1,57 @@
+# Construye las imagenes de PET ID y las guarda en GitHub Container Registry, privadas.
+# Corre cuando cambia la web o el reconocimiento en main, o a mano desde Actions.
+# Cada imagen sale con dos etiquetas: "piloto" (la ultima) y "sha-<commit>" (fija,
+# la que se despliega; ver infra/ansible/roles/petid/defaults/main.yml).
+name: Imagenes
+
+on:
+  push:
+    branches: [main]
+    paths: ["src/web/**", "src/reconocimiento/**", ".github/workflows/imagenes.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  construir:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nombre: web
+            contexto: src/web
+          - nombre: reconocimiento
+            contexto: src/reconocimiento
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Entrar a GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Variables del repositorio (Settings > Secrets and variables > Actions > Variables).
+      # No son secretas: la URL de Supabase y la clave anon terminan en el navegador.
+      - name: Construir y publicar
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.contexto }}
+          push: true
+          pull: true
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ vars.PILOTO_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ vars.PILOTO_SUPABASE_ANON_KEY }}
+            NEXT_PUBLIC_SITE_URL=https://piloto.petid.com.pe
+            NEXT_PUBLIC_CORREO_CONTACTO=${{ vars.PILOTO_CORREO_CONTACTO }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/pet-id-${{ matrix.nombre }}:piloto
+            ghcr.io/${{ github.repository_owner }}/pet-id-${{ matrix.nombre }}:sha-${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.nombre }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.nombre }}

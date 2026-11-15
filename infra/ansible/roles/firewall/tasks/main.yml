@@ -1,0 +1,33 @@
+---
+- name: Paquete nftables
+  ansible.builtin.apt:
+    name: nftables
+    state: present
+
+- name: Reglas del cortafuegos
+  ansible.builtin.template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: "0755"
+    backup: true
+    validate: nft -c -f %s
+  notify: Aplicar cortafuegos
+
+- name: Cortafuegos activo al arrancar
+  ansible.builtin.systemd_service:
+    name: nftables
+    enabled: true
+
+- name: Aplicar ahora si cambiaron las reglas
+  ansible.builtin.meta: flush_handlers
+
+- name: Probar con una conexion nueva
+  ansible.builtin.meta: reset_connection
+
+- name: Conexion nueva correcta; cancelar el retroceso automatico
+  ansible.builtin.command: systemctl stop nft-rollback.timer  # noqa: command-instead-of-module
+  register: firewall_confirm
+  changed_when: firewall_confirm.rc == 0
+  failed_when: false

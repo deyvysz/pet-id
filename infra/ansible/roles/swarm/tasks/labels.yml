@@ -1,0 +1,18 @@
+---
+# Se corre en el primer manager cuando todos los nodos ya estan en el swarm.
+- name: Etiqueta de rol de cada nodo
+  community.docker.docker_node:
+    hostname: "{{ item }}"
+    labels:
+      role: "{{ hostvars[item].node_role }}"
+    labels_state: merge
+  loop: "{{ groups['swarm_managers'] }}"
+
+- name: Redes overlay cifradas
+  community.docker.docker_network:
+    name: "{{ item }}"
+    driver: overlay
+    attachable: true
+    driver_options:
+      encrypted: "true"
+  loop: "{{ swarm_overlay_networks }}"

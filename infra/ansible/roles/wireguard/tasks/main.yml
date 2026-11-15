@@ -1,0 +1,68 @@
+---
+# VPN de administracion. La llave privada del servidor se genera en el propio
+# servidor y no sale de ahi: no esta en el repositorio.
+- name: WireGuard instalado
+  ansible.builtin.apt:
+    name: wireguard
+    state: present
+
+- name: Llave del servidor (solo se genera si no existe)
+  ansible.builtin.shell: |
+    umask 077
+    wg genkey > /etc/wireguard/server.key
+    wg pubkey < /etc/wireguard/server.key > /etc/wireguard/server.pub
+  args:
+    creates: /etc/wireguard/server.key
+
+- name: Leer la llave privada del servidor
+  ansible.builtin.slurp:
+    src: /etc/wireguard/server.key
+  register: wireguard_server_key
+  no_log: true
+
+- name: Leer la llave publica del servidor
+  ansible.builtin.slurp:
+    src: /etc/wireguard/server.pub
+  register: wireguard_server_pub
+
+- name: Mostrar la llave publica (va en el [Peer] de cada cliente)
+  ansible.builtin.debug:
+    msg: "{{ wireguard_server_pub.content | b64decode | trim }}"
+
+- name: Pares que el servidor tiene hoy
+  ansible.builtin.command: wg show {{ vpn_iface }} peers
+  register: wireguard_current_peers
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+# Proteccion contra llaves mal copiadas: si la interfaz ya esta activa, al menos
+# una llave del inventario tiene que coincidir con un par actual. Si no, se
+# reescribiria la configuracion con llaves que no conectan y se perderia el
+# acceso por la VPN.
+- name: Al menos un par del inventario coincide con los actuales
+  ansible.builtin.assert:
+    that:
+      - wireguard_peers | map(attribute='public_key') | intersect(wireguard_current_peers.stdout_lines) | length > 0
+    fail_msg: >-
+      Ninguna llave publica de wireguard_peers coincide con los pares activos
+      ({{ wireguard_current_peers.stdout_lines | join(', ') }}). Revisar las
+      llaves en inventory/piloto/group_vars/all.yml antes de continuar.
+  when: wireguard_current_peers.rc == 0 and wireguard_current_peers.stdout_lines | length > 0
+
+- name: Configuracion de la interfaz
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/{{ vpn_iface }}.conf
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  no_log: true
+  notify: Sincronizar pares de WireGuard
+
+- name: WireGuard activo al arrancar
+  ansible.builtin.systemd_service:
+    name: wg-quick@{{ vpn_iface }}
+    enabled: true
+    state: started

@@ -1,0 +1,18 @@
+#!/bin/sh
+# Administrado por Ansible (pet-id, rol traefik). No editar a mano.
+# El 443 que publica Traefik solo acepta conexiones que llegan por la interfaz
+# publica desde rangos de Cloudflare. Todo lo demas que llega al 443 por esa
+# interfaz se descarta. Idempotente: rehace la cadena PETID-HTTPS en cada corrida.
+set -e
+
+iptables -N PETID-HTTPS 2>/dev/null || true
+iptables -F PETID-HTTPS
+{% for cidr in cloudflare_ipv4_ranges %}
+iptables -A PETID-HTTPS -s {{ cidr }} -j RETURN
+{% endfor %}
+iptables -A PETID-HTTPS -j DROP
+
+# "ctorigdstport" mira el puerto al que se conecto el visitante, antes de que
+# Docker lo redirija al contenedor.
+iptables -C DOCKER-USER -i {{ public_iface }} -p tcp -m conntrack --ctdir ORIGINAL --ctorigdstport 443 -j PETID-HTTPS 2>/dev/null \
+  || iptables -I DOCKER-USER -i {{ public_iface }} -p tcp -m conntrack --ctdir ORIGINAL --ctorigdstport 443 -j PETID-HTTPS

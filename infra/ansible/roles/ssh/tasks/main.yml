@@ -1,0 +1,16 @@
+---
+# SSH solo con llave. El acceso desde internet lo cierra el cortafuegos;
+# SSH entra por la VPN (wg0) y por la red privada (eth1).
+- name: Endurecimiento de SSH
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/00-endurecimiento.conf
+    content: |
+      # Administrado por Ansible (pet-id, rol ssh).
+      # El prefijo 00- hace que estos valores ganen sobre los de Contabo.
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitRootLogin no
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Validar y recargar SSH

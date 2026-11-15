@@ -1,0 +1,9 @@
+---
+# Swarm de un solo nodo. Da secretos, configs, revision de salud y vuelta atras
+# automatica; si el piloto crece a dos o tres servidores, los demas se unen aqui.
+- name: Inicializar el swarm
+  community.docker.docker_swarm:
+    state: present
+    advertise_addr: "{{ swarm_advertise_addr }}"
+    default_addr_pool: "{{ swarm_default_addr_pool }}"
+    subnet_size: "{{ swarm_subnet_size }}"

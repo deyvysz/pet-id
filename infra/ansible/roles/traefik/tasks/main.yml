@@ -1,0 +1,12 @@
+---
+# El rol tiene dos partes que corren en lugares distintos:
+# - firewall.yml en cada servidor publico (role=public), antes de abrir el 443;
+# - deploy.yml una sola vez, en el primer manager del swarm.
+# El playbook site.yml las llama por separado.
+- name: Regla del 443
+  ansible.builtin.include_tasks: firewall.yml
+  when: node_role == 'public'
+
+- name: Despliegue del stack
+  ansible.builtin.include_tasks: deploy.yml
+  when: inventory_hostname == groups['swarm_managers'][0]

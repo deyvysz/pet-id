@@ -1,3 +1,11 @@
 # Copias de trabajo de los agentes (locales, no se versionan)
 .claude/worktrees/
 .local-logs/
+
+# Ansible y secretos: solo se versionan los *.sops.yaml cifrados.
+infra/ansible/collections/
+*.dec.yaml
+*.key
+age.txt
+keys.txt
+*.retry

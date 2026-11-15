@@ -1,0 +1,13 @@
+---
+# Version de las imagenes que se despliega. GitHub Actions publica dos etiquetas
+# por commit: "piloto" (la ultima) y "sha-<commit>" (fija). En el piloto se usa
+# la fija: para cambiar de version se edita aqui y se corre --tags petid.
+petid_version: ""
+petid_imagen_web: "ghcr.io/deyvysz/pet-id-web"
+petid_imagen_reconocimiento: "ghcr.io/deyvysz/pet-id-reconocimiento"
+petid_stack_dir: /opt/petid/stacks/petid
+
+# Memoria. El modelo real (OWL-ViT + DINOv2) ocupa cerca de 1.5 GB por proceso.
+petid_memoria_web: 768M
+petid_memoria_reconocimiento: 3G
+petid_memoria_worker: 3G

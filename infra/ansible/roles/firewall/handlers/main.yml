@@ -1,0 +1,12 @@
+---
+# Red de seguridad: antes de aplicar se programa que en 5 minutos el servidor
+# borre la tabla. Si Ansible logra abrir una conexion nueva despues de aplicar
+# (tareas finales del rol), cancela el retroceso. Si no puede, el retroceso
+# corre solo y se vuelve a entrar.
+- name: Aplicar cortafuegos  # noqa: command-instead-of-module
+  ansible.builtin.shell: |
+    systemctl stop nft-rollback.timer 2>/dev/null || true
+    systemctl reset-failed nft-rollback.timer nft-rollback.service 2>/dev/null || true
+    systemd-run --on-active=5min --unit=nft-rollback /usr/sbin/nft delete table inet host
+    nft -f /etc/nftables.conf
+  changed_when: true

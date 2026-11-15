@@ -1,0 +1,58 @@
+---
+environment_name: piloto
+
+public_iface: eth0
+
+# VPN de administracion. El servidor es 10.10.0.1.
+vpn_iface: wg0
+vpn_cidr: 10.10.0.0/24
+wireguard_address: 10.10.0.1/24
+wireguard_port: 51820
+# Solo llaves publicas. Cada persona genera su llave privada en su propio
+# cliente y nunca la comparte. Siguiente IP libre: 10.10.0.3.
+wireguard_peers:
+  - name: Deyvys, computadora personal
+    # Llave publica del cliente WireGuard (Windows o WSL); se completa antes de la primera corrida.
+    public_key: ""
+    address: 10.10.0.2/32
+
+# Docker. Misma version fija que gproductionlab-infra.
+docker_version: "29.9.2"
+
+# Swarm de un nodo. Las overlay salen de 10.20.0.0/16, como en la arquitectura de referencia.
+swarm_advertise_addr: 10.10.0.1  # IP de la VPN: el swarm no se anuncia en la interfaz publica
+swarm_default_addr_pool:
+  - 10.20.0.0/16
+swarm_subnet_size: 24
+swarm_overlay_networks:
+  - edge
+  - internal
+
+timezone: UTC
+
+# Dominio. El piloto se publica en piloto.petid.com.pe, detras de Cloudflare Access.
+base_domain: petid.com.pe
+petid_host: "piloto.{{ base_domain }}"
+
+# Supabase Cloud (proyecto del piloto, region us-east-1). La URL y la clave
+# publica (anon) no son secretas: tambien van en la imagen de la web.
+supabase_url: ""
+
+# Rangos IPv4 de Cloudflare, copiados de gproductionlab-infra (tomados de
+# https://www.cloudflare.com/ips/ el 27/10/2026). El 443 solo acepta estos.
+cloudflare_ipv4_ranges:
+  - 103.21.244.0/22
+  - 103.22.200.0/22
+  - 103.31.4.0/22
+  - 104.16.0.0/13
+  - 104.24.0.0/14
+  - 108.162.192.0/18
+  - 131.0.72.0/22
+  - 141.101.64.0/18
+  - 162.158.0.0/15
+  - 172.64.0.0/13
+  - 173.245.48.0/20
+  - 188.114.96.0/20
+  - 190.93.240.0/20
+  - 197.234.240.0/22
+  - 198.41.128.0/17

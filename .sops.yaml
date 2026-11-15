@@ -1,0 +1,8 @@
+# Reglas de cifrado de SOPS. Todo archivo *.sops.yaml o *.sops.yml del
+# repositorio se cifra con estas llaves age (solo las publicas van aqui).
+# Para dar acceso a otra persona: agregar su llave publica y correr
+# "sops updatekeys <archivo>" en cada archivo cifrado.
+creation_rules:
+  - path_regex: (^|/)[^/]+\.sops\.ya?ml$
+    age: >-
+      age1805vpqr9fyzyn7nmwtpjpuzne32fkhah3m68zp0753zy6xyvy3yspnlanu

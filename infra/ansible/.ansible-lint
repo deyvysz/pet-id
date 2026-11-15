@@ -1,0 +1,5 @@
+# Configuración del lint de Ansible que corre en cada PR (.github/workflows/pr.yml).
+# Los archivos de SOPS van cifrados: sus líneas largas no se pueden acortar.
+exclude_paths:
+  - "**/*.sops.yaml"
+  - collections/

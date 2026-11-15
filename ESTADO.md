@@ -18,6 +18,12 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 - Aviso al propietario por correo (decisión 010).
 - Revisión independiente hecha: 6 fallas corregidas (migración 0008, middleware de sesión, ruta del certificado, QR con sesión, vista pública con un solo reporte, contacto con hallazgo inexistente).
 
+## Despliegue del piloto (decisión 013)
+
+Infraestructura lista en el repositorio: Dockerfiles, GitHub Actions para GHCR, Ansible en `infra/ansible/` y guía en `docs/operacion/despliegue-piloto.md`. Verificado aquí: sintaxis del playbook, plantillas de los stacks y build de la web en modo standalone. No se ha corrido contra un servidor.
+
+Falta de Deyvys: contratar el VPS, crear el proyecto Supabase, pasar `petid.com.pe` a Cloudflare y cargar los secretos.
+
 ## Siguiente
 
 1. Crear el proyecto en Supabase, aplicar migraciones 0001 a 0009 y el seed, activar el proveedor SMS de Auth.

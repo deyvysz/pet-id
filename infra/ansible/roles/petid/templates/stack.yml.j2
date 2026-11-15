@@ -1,0 +1,101 @@
+# Administrado por Ansible (pet-id, rol petid). No editar a mano:
+# se genera desde infra/ansible/roles/petid/templates/stack.yml.j2.
+#
+# web: unico servicio expuesto, y solo a traves de Traefik (red edge).
+# reconocimiento y worker: solo en la red internal, sin puertos.
+x-reconocimiento-env: &reconocimiento_env
+  MODELO: real
+  SUPABASE_URL: "{{ supabase_url }}"
+  URL_HOSTS_PERMITIDOS: "{{ supabase_url | urlsplit('hostname') }}"
+
+services:
+  web:
+    image: {{ petid_imagen_web }}:{{ petid_version }}
+    environment:
+      RECONOCIMIENTO_URL: http://reconocimiento:8000
+      NEXT_PUBLIC_SITE_URL: "https://{{ petid_host }}"
+    secrets:
+      - source: {{ petid_secretos.supabase_service_role_key }}
+        target: supabase_service_role_key
+      - source: {{ petid_secretos.resend_api_key }}
+        target: resend_api_key
+    networks: [edge, internal]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.role == public]
+      update_config:
+        order: start-first
+        failure_action: rollback
+        monitor: 60s
+      rollback_config:
+        order: start-first
+      resources:
+        limits:
+          memory: {{ petid_memoria_web }}
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.petid.rule=Host(`{{ petid_host }}`)
+        - traefik.http.routers.petid.entrypoints=websecure
+        - traefik.http.routers.petid.tls=true
+        - traefik.http.services.petid.loadbalancer.server.port=3000
+
+  reconocimiento:
+    image: {{ petid_imagen_reconocimiento }}:{{ petid_version }}
+    environment: *reconocimiento_env
+    secrets:
+      - source: {{ petid_secretos.supabase_service_role_key }}
+        target: supabase_service_role_key
+      - source: {{ petid_secretos.database_url }}
+        target: database_url
+    networks: [internal]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    deploy:
+      replicas: 1
+      update_config:
+        failure_action: rollback
+        monitor: 120s
+      resources:
+        limits:
+          memory: {{ petid_memoria_reconocimiento }}
+
+  worker:
+    image: {{ petid_imagen_reconocimiento }}:{{ petid_version }}
+    command: ["python", "-m", "app.cola"]
+    environment: *reconocimiento_env
+    secrets:
+      - source: {{ petid_secretos.supabase_service_role_key }}
+        target: supabase_service_role_key
+      - source: {{ petid_secretos.database_url }}
+        target: database_url
+    networks: [internal]
+    deploy:
+      replicas: 1
+      update_config:
+        failure_action: rollback
+      resources:
+        limits:
+          memory: {{ petid_memoria_worker }}
+
+networks:
+  edge:
+    external: true
+  internal:
+    external: true
+
+secrets:
+{% for nombre in petid_secretos.values() | unique %}
+  {{ nombre }}:
+    external: true
+{% endfor %}

@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12.7-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -23,10 +23,13 @@ ENV HF_HUB_OFFLINE=1
 
 COPY app ./app
 COPY eval ./eval
+COPY --chmod=755 cargar-secretos.sh /usr/local/bin/cargar-secretos
 
 RUN useradd --system --uid 10001 servicio && chown -R servicio /srv /modelos
 USER servicio
 
 EXPOSE 8000
+# Los secretos de Swarm (/run/secrets) pasan a variables de entorno antes de arrancar.
+ENTRYPOINT ["/usr/local/bin/cargar-secretos"]
 # API: valor por defecto. Worker de la cola: docker run ... python -m app.cola
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

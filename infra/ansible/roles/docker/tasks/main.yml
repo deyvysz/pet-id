@@ -1,0 +1,76 @@
+---
+# Docker CE desde el repositorio oficial de Docker.
+- name: Quitar paquetes de Docker de Ubuntu que chocan con Docker CE
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - docker-doc
+      - docker-compose
+      - docker-compose-v2
+      - podman-docker
+      - containerd
+      - runc
+    state: absent
+
+- name: Carpeta de llaves de apt
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Llave del repositorio de Docker
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+
+- name: Repositorio de Docker
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/ubuntu
+    suites: "{{ ansible_facts['distribution_release'] }}"
+    components: stable
+    signed_by: /etc/apt/keyrings/docker.asc
+
+- name: Paquetes de Docker
+  ansible.builtin.apt:
+    name: "{{ docker_packages }}"
+    state: present
+    update_cache: true
+  vars:
+    docker_suffix: "{{ ('=5:' ~ docker_version ~ '-1~ubuntu.24.04~' ~ ansible_facts['distribution_release']) if docker_version else '' }}"
+    docker_packages:
+      - "docker-ce{{ docker_suffix }}"
+      - "docker-ce-cli{{ docker_suffix }}"
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+
+- name: Configuracion del demonio de Docker
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: "{{ docker_daemon_config | to_nice_json }}\n"
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    docker_daemon_config:
+      log-driver: json-file
+      log-opts:
+        max-size: 20m
+        max-file: "5"
+  notify: Reiniciar Docker
+
+- name: Docker activo al arrancar
+  ansible.builtin.systemd_service:
+    name: docker
+    enabled: true
+    state: started
+
+- name: El usuario admin usa Docker sin sudo
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+

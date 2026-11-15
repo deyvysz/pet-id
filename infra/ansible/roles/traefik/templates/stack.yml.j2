@@ -1,0 +1,68 @@
+# Administrado por Ansible (pet-id, rol traefik). No editar a mano:
+# se genera desde roles/traefik/templates/stack.yml.j2.
+#
+# Pieza 1: Traefik, la unica puerta de entrada. Corre en el servidor con
+# etiqueta role=public y es el unico servicio que publica un puerto.
+services:
+  traefik:
+    image: {{ traefik_image }}
+    command:
+      - --entrypoints.websecure.address=:443
+      # Direcciones reales de los visitantes: solo se aceptan si vienen de Cloudflare.
+      - --entrypoints.websecure.forwardedHeaders.trustedIPs={{ cloudflare_ipv4_ranges | join(',') }}
+      # Lee los servicios del swarm y publica solo los que digan traefik.enable=true.
+      - --providers.swarm.endpoint=unix:///var/run/docker.sock
+      - --providers.swarm.exposedByDefault=false
+      - --providers.swarm.network=edge
+      # Configuracion del certificado (pieza 2).
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --log.level=INFO
+      - --accesslog=true
+      # Metricas para Prometheus (cuando se agregue el monitoreo), en un puerto
+      # interno que no se publica: solo se leen desde la red edge.
+      - --entrypoints.metrics.address=:8082
+      - --metrics.prometheus=true
+      - --metrics.prometheus.entryPoint=metrics
+      - --metrics.prometheus.addServicesLabels=true
+    ports:
+      # Modo host: el 443 se abre en el servidor donde corre Traefik. El
+      # cortafuegos (pieza 3) lo limita a Cloudflare.
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    volumes:
+      # Traefik pregunta a Docker que servicios hay. Solo lectura.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    secrets:
+      - source: {{ traefik_secret_cert_name }}
+        target: origin_cert
+      - source: {{ traefik_secret_key_name }}
+        target: origin_key
+    configs:
+      - source: {{ traefik_config_name }}
+        target: /etc/traefik/dynamic.yml
+    networks:
+      - edge
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.role == public
+      resources:
+        limits:
+          memory: 256M
+
+networks:
+  edge:
+    external: true
+
+secrets:
+  {{ traefik_secret_cert_name }}:
+    external: true
+  {{ traefik_secret_key_name }}:
+    external: true
+
+configs:
+  {{ traefik_config_name }}:
+    external: true

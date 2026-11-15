@@ -1,0 +1,8 @@
+---
+# Version fija. 3.6.1 es la primera que habla con Docker 29; versiones
+# anteriores fallan con "client version 1.24 is too old".
+traefik_image: "traefik:v3.6.2"
+
+# Donde queda el archivo del stack en el primer manager.
+traefik_stack_dir: /opt/petid/stacks/traefik
+

@@ -1,0 +1,29 @@
+# Plantilla de los secretos del piloto. NO poner valores reales en este archivo.
+# Pasos (en WSL, con la llave age en ~/.config/sops/age/keys.txt):
+#   cp all.sops.example.yaml all.sops.yaml
+#   sops all.sops.yaml          # se abre con nano si EDITOR=nano; al guardar queda cifrado
+# Solo se versiona all.sops.yaml cifrado.
+
+# Certificado de origen de Cloudflare (SSL/TLS > Servidor de origen), ECC,
+# para petid.com.pe y *.petid.com.pe, 15 anos.
+secret_origin_cert: |
+  -----BEGIN CERTIFICATE-----
+  pegar aqui
+  -----END CERTIFICATE-----
+secret_origin_key: |
+  -----BEGIN PRIVATE KEY-----
+  pegar aqui
+  -----END PRIVATE KEY-----
+
+# Supabase (Project Settings > API y > Database).
+secret_supabase_service_role_key: pegar aqui
+# Cadena del pooler en modo sesion (puerto 5432 del host aws-0-us-east-1.pooler.supabase.com):
+# la conexion directa de Supabase es solo IPv6.
+secret_database_url: postgresql://postgres.REF:CLAVE@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+
+# Correo (Resend). Vacio: los avisos se guardan pero no se envian.
+secret_resend_api_key: ""
+
+# Token de GitHub (classic) con permiso read:packages, para bajar las imagenes privadas de GHCR.
+secret_ghcr_user: deyvysz
+secret_ghcr_token: pegar aqui

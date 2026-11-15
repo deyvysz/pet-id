@@ -1,0 +1,79 @@
+---
+# Despliega PET ID en el swarm: web (Next.js), reconocimiento (FastAPI) y worker.
+- name: Version de las imagenes definida
+  ansible.builtin.assert:
+    that:
+      - petid_version | length > 0
+      - supabase_url | length > 0
+    fail_msg: >-
+      Falta petid_version (roles/petid/defaults o -e petid_version=sha-<commit>)
+      o supabase_url (inventory/piloto/group_vars/all.yml).
+
+# Los secretos de Swarm no se modifican: el nombre lleva una huella del
+# contenido y, si cambia el valor, se crea uno nuevo y el stack pasa a usarlo.
+- name: Nombres de los secretos, con huella del contenido
+  ansible.builtin.set_fact:
+    petid_secretos:
+      supabase_service_role_key: "petid_srk_{{ (secret_supabase_service_role_key | hash('sha256'))[:10] }}"
+      database_url: "petid_db_{{ (secret_database_url | hash('sha256'))[:10] }}"
+      resend_api_key: "petid_resend_{{ ((secret_resend_api_key | default('')) | hash('sha256'))[:10] }}"
+  no_log: true
+
+- name: Secretos del swarm
+  community.docker.docker_secret:
+    name: "{{ item.nombre }}"
+    data: "{{ item.valor if item.valor | length > 0 else 'vacio' }}"
+    state: present
+  loop:
+    - { nombre: "{{ petid_secretos.supabase_service_role_key }}", valor: "{{ secret_supabase_service_role_key }}" }
+    - { nombre: "{{ petid_secretos.database_url }}", valor: "{{ secret_database_url }}" }
+    - { nombre: "{{ petid_secretos.resend_api_key }}", valor: "{{ secret_resend_api_key | default('') }}" }
+  no_log: true
+
+- name: Entrar a GitHub Container Registry (imagenes privadas)
+  community.docker.docker_login:
+    registry_url: ghcr.io
+    username: "{{ secret_ghcr_user }}"
+    password: "{{ secret_ghcr_token }}"
+  no_log: true
+
+- name: Carpeta del stack
+  ansible.builtin.file:
+    path: "{{ petid_stack_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Archivo del stack
+  ansible.builtin.template:
+    src: stack.yml.j2
+    dest: "{{ petid_stack_dir }}/stack.yml"
+    owner: root
+    group: root
+    mode: "0640"
+  register: petid_stack_file
+
+- name: Stacks que existen hoy
+  ansible.builtin.command: docker stack ls --format '{{ "{{" }}.Name{{ "}}" }}'
+  register: petid_stacks
+  changed_when: false
+  check_mode: false
+
+- name: Desplegar el stack
+  ansible.builtin.command: >-
+    docker stack deploy --detach=true --prune --with-registry-auth --resolve-image=changed
+    --compose-file {{ petid_stack_dir }}/stack.yml petid
+  when: petid_stack_file.changed or 'petid' not in petid_stacks.stdout_lines
+  changed_when: true
+
+- name: Esperar a que los tres servicios esten corriendo
+  ansible.builtin.command: >-
+    docker service ls --filter label=com.docker.stack.namespace=petid
+    --format '{{ "{{" }}.Name{{ "}}" }} {{ "{{" }}.Replicas{{ "}}" }}'
+  register: petid_replicas
+  until: petid_replicas.stdout_lines | length == 3 and (petid_replicas.stdout_lines | select('search', ' 1/1$') | list | length == 3)
+  retries: 40
+  delay: 15
+  changed_when: false
+  when: not ansible_check_mode
