@@ -17,7 +17,7 @@ secret_origin_key: |
 
 # Supabase (Project Settings > API y > Database).
 secret_supabase_service_role_key: pegar aqui
-# Cadena del pooler en modo sesion (puerto 5432 del host aws-0-us-east-1.pooler.supabase.com):
+# Cadena del pooler en modo sesion (puerto 5432; copiar el host exacto del panel, cambia segun la region; ej. aws-0-us-east-1.pooler.supabase.com):
 # la conexion directa de Supabase es solo IPv6.
 secret_database_url: postgresql://postgres.REF:CLAVE@aws-0-us-east-1.pooler.supabase.com:5432/postgres
 
