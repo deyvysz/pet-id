@@ -34,14 +34,22 @@ Hacer los ajustes de `docs/cloudflare.md` y anotar la fecha en cada fila. El cer
 
 ## 4. Secretos
 
-En `infra/ansible/inventory/piloto/group_vars/`:
+PET ID usa su propia llave age. Antes del primer `sops`, créala y pon su llave pública en `.sops.yaml`:
+
+```bash
+mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/petid.txt
+echo 'export SOPS_AGE_KEY_FILE=~/.config/sops/age/petid.txt' >> ~/.bashrc && source ~/.bashrc
+nano ~/petid-infra/.sops.yaml   # pegar la "Public key: age1..." que imprimió age-keygen
+```
+
+Guarda una copia de `petid.txt` en tu gestor de contraseñas: sin ella no se pueden descifrar los secretos.
+
+Después, en `infra/ansible/inventory/piloto/group_vars/`:
 
 ```bash
 cp all.sops.example.yaml all.sops.yaml
 EDITOR=nano sops all.sops.yaml
 ```
-
-`.sops.yaml` usa la misma llave pública age que gproductionlab-infra. Si prefieres una llave propia para PET ID: `age-keygen -o ~/.config/sops/age/petid.txt` y reemplaza la llave pública en `.sops.yaml`.
 
 Verificación: `head -5 all.sops.yaml` muestra valores `ENC[...]`.
 

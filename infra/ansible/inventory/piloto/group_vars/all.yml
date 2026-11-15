@@ -16,7 +16,7 @@ wireguard_peers:
     public_key: ""
     address: 10.10.0.2/32
 
-# Docker. Misma version fija que gproductionlab-infra.
+# Docker. Version fija; para actualizar se cambia aqui y se prueba antes.
 docker_version: "29.9.2"
 
 # Swarm de un nodo. Las overlay salen de 10.20.0.0/16, como en la arquitectura de referencia.
@@ -38,8 +38,8 @@ petid_host: "piloto.{{ base_domain }}"
 # publica (anon) no son secretas: tambien van en la imagen de la web.
 supabase_url: ""
 
-# Rangos IPv4 de Cloudflare, copiados de gproductionlab-infra (tomados de
-# https://www.cloudflare.com/ips/ el 27/10/2026). El 443 solo acepta estos.
+# Rangos IPv4 de Cloudflare, publicados en https://www.cloudflare.com/ips/
+# (lista del 27/10/2026; revisarla al desplegar). El 443 solo acepta estos.
 cloudflare_ipv4_ranges:
   - 103.21.244.0/22
   - 103.22.200.0/22

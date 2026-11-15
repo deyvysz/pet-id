@@ -1,8 +1,14 @@
 # Reglas de cifrado de SOPS. Todo archivo *.sops.yaml o *.sops.yml del
 # repositorio se cifra con estas llaves age (solo las publicas van aqui).
-# Para dar acceso a otra persona: agregar su llave publica y correr
-# "sops updatekeys <archivo>" en cada archivo cifrado.
+#
+# PET ID usa su propia llave, distinta de la de cualquier otro proyecto.
+# Se crea una sola vez, en WSL:
+#   mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/petid.txt
+#   export SOPS_AGE_KEY_FILE=~/.config/sops/age/petid.txt   # agregar a ~/.bashrc
+# El comando imprime "Public key: age1..."; esa linea reemplaza el valor de abajo.
+# La llave privada (petid.txt) no se sube al repositorio ni se comparte; se
+# guarda una copia en el gestor de contrasenas.
 creation_rules:
   - path_regex: (^|/)[^/]+\.sops\.ya?ml$
     age: >-
-      age1805vpqr9fyzyn7nmwtpjpuzne32fkhah3m68zp0753zy6xyvy3yspnlanu
+      REEMPLAZAR_POR_LA_LLAVE_PUBLICA_AGE_DE_PETID

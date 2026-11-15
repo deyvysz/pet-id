@@ -9,7 +9,7 @@ El piloto es una presentación previa para personas invitadas; no va al público
 3. Dominio `petid.com.pe` en Cloudflare. El piloto se publica en `piloto.petid.com.pe`, detrás de Cloudflare Access con lista de correos.
 4. El 443 solo acepta rangos de Cloudflare; SSH solo por WireGuard con llave.
 5. Imágenes en GHCR con etiqueta fija `sha-<commit>`, construidas por GitHub Actions. Secretos en SOPS con age.
-6. Ansible en `infra/ansible/`, adaptado de `gproductionlab-infra` (roles base, ssh, firewall, wireguard, docker, swarm, traefik) más el rol `petid`.
+6. Ansible en `infra/ansible/`: roles base, ssh, firewall, wireguard, docker, swarm, traefik y petid, según la arquitectura de referencia de tres capas. PET ID no comparte servidores, llaves, secretos ni dominio con ningún otro proyecto.
 
 Fuera del piloto, para producción: monitoreo (Prometheus, Grafana, Loki), respaldo propio fuera de Supabase, proveedor de SMS y los requisitos de la Ley 29733.
 

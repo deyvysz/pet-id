@@ -12,4 +12,4 @@ Zona `petid.com.pe`. Lo que configura Ansible se repite solo; lo de esta tabla s
 | Access | Zero Trust, Acceso, Aplicaciones | Aplicación `piloto.petid.com.pe`, política "Invitados del piloto" con la lista de correos, código por correo | pendiente |
 | TTL de caché del navegador | Almacenamiento en caché, Configuración | Respetar encabezados existentes | pendiente |
 
-Después de un incidente en que el origen respondió errores, se purga la caché antes de dar el servicio por recuperado (lección del 28/10/2026 en gproductionlab-infra).
+Después de un incidente en que el origen respondió errores, se purga la caché antes de dar el servicio por recuperado.
