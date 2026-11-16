@@ -15,7 +15,7 @@ Fecha: 15 de noviembre de 2026. Decisión 013. Sigue el manual de la plataforma 
 2. Activar la cola: Integrations > Queues (extensión pgmq).
 3. Aplicar las migraciones desde WSL, en `~/petid-infra/infra`:
    `npx supabase@2.48.3 link --project-ref <ref>` y luego `npx supabase@2.48.3 db push`.
-4. Authentication > Providers > Phone: activarlo. Para el piloto, registrar en "Test phone numbers" el celular de cada invitado con un código fijo; así no se envían SMS. Si Supabase exige un proveedor para activar Phone, se crea una cuenta de prueba de Twilio.
+4. Authentication > Sign In / Providers > Phone: activarlo. En "Test OTP" se registran solo dos números, los del seed, con código fijo `123456`: `51987654321` (Ana, propietaria) y `51900000000` (administrador). No se envían SMS ni hace falta un proveedor, y quien prueba el piloto entra con esos datos sin registrar su propio celular.
 5. Authentication > URL Configuration: Site URL `https://piloto.petid.com.pe`.
 
 Verificación: en Table Editor aparecen las tablas y `ubigeo` tiene 1,893 filas.
@@ -84,7 +84,7 @@ Verificación:
 - Desde fuera de la VPN, `ssh admin@<IP pública>` no responde.
 - `curl -k https://<IP pública>` desde tu casa no responde (el 443 solo acepta a Cloudflare).
 - `docker service ls` en el servidor muestra `petid_web`, `petid_reconocimiento` y `petid_worker` en 1/1.
-- `https://piloto.petid.com.pe` pide el correo (Access) y, tras el código, abre PET ID.
+- `https://piloto.petid.com.pe` abre PET ID. Con el celular `987654321` y el código `123456` se entra como Ana y se ven Max y Luna.
 - Segunda corrida completa de `site.yml`: `changed=0`.
 - Memoria: `docker stats --no-stream` con el piloto en uso. El reconocimiento y el worker deben quedar bajo su tope de 2,500 MB y `free -h` debe mostrar memoria disponible sin usar el intercambio de forma sostenida.
 

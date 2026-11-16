@@ -9,7 +9,6 @@ Zona `petid.com.pe`. Lo que configura Ansible se repite solo; lo de esta tabla s
 | TLS mínimo | SSL/TLS, Certificados perimetrales | 1.2 | pendiente |
 | Certificado de origen | SSL/TLS, Servidor de origen | ECC, `*.petid.com.pe` y `petid.com.pe`, 15 años; va cifrado en SOPS | pendiente |
 | Registro DNS | DNS | `piloto`, tipo A, 194.238.30.239, con proxy | 16/11/2026 |
-| Access | Zero Trust, Acceso, Aplicaciones | Aplicación `piloto.petid.com.pe`, política "Invitados del piloto" con la lista de correos, código por correo | pendiente |
 | TTL de caché del navegador | Almacenamiento en caché, Configuración | Respetar encabezados existentes | pendiente |
 
 ## Servidores de nombres
