@@ -1,9 +1,8 @@
--- Supabase Cloud instala pgcrypto en el esquema "extensions"; el stub local lo
--- deja en "public". Con esto crypt() y gen_salt() se encuentran en ambos casos.
-set search_path = public, extensions;
-
 -- PET ID: datos de demostración (coherentes con docs/diseno/prototipo.html).
 -- Solo para entornos locales o de prueba. No aplicar en producción: crea cuentas con contraseña conocida.
+-- La contraseña va como hash bcrypt ya calculado: pgcrypto vive en "public" en el
+-- stub local y en "extensions" en Supabase Cloud, y gen_salt() no se encuentra en ambos.
+-- En el piloto el ingreso es por celular y código, así que esta contraseña casi no se usa.
 --
 -- Cuentas (contraseña de ambas: demo1234):
 --   ana.perez@correo.com   propietaria demo, Miraflores
@@ -20,14 +19,14 @@ insert into auth.users (instance_id, id, aud, role, email, encrypted_password, e
                         email_change_token_new, email_change, created_at, updated_at)
 values
   ('00000000-0000-0000-0000-000000000000', '0a000000-0000-4000-8000-000000000001', 'authenticated', 'authenticated',
-   'ana.perez@correo.com', crypt('demo1234', gen_salt('bf')), now(),
+   'ana.perez@correo.com', '$2b$10$qjLBtUx0/Q4Nbj.8AM0K7.AZktslD5W0TTYi8.2Dw16Po..s42P4.', now(),
    '{"provider":"email","providers":["email"]}',
    '{"nombres":"Ana","apellidos":"Pérez","tipo_documento":"DNI","numero_documento":"12345678",
      "celular":"987654321","departamento":"Lima","provincia":"Lima","distrito":"Miraflores",
      "acepta_terminos":true,"acepta_privacidad":true}',
    '', '', '', '', '2026-11-04 10:00:00-05', now()),
   ('00000000-0000-0000-0000-000000000000', '0a000000-0000-4000-8000-000000000002', 'authenticated', 'authenticated',
-   'admin@petid.local', crypt('demo1234', gen_salt('bf')), now(),
+   'admin@petid.local', '$2b$10$qjLBtUx0/Q4Nbj.8AM0K7.AZktslD5W0TTYi8.2Dw16Po..s42P4.', now(),
    '{"provider":"email","providers":["email"]}',
    '{"nombres":"Admin","apellidos":"PET ID","tipo_documento":"DNI","numero_documento":"87654321",
      "celular":"900000000","departamento":"Lima","provincia":"Lima","distrito":"San Isidro",
