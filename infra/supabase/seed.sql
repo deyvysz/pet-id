@@ -1,3 +1,7 @@
+-- Supabase Cloud instala pgcrypto en el esquema "extensions"; el stub local lo
+-- deja en "public". Con esto crypt() y gen_salt() se encuentran en ambos casos.
+set search_path = public, extensions;
+
 -- PET ID: datos de demostración (coherentes con docs/diseno/prototipo.html).
 -- Solo para entornos locales o de prueba. No aplicar en producción: crea cuentas con contraseña conocida.
 --
