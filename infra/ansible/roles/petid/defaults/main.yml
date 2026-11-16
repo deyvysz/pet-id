@@ -2,7 +2,7 @@
 # Version de las imagenes que se despliega. GitHub Actions publica dos etiquetas
 # por commit: "piloto" (la ultima) y "sha-<commit>" (fija). En el piloto se usa
 # la fija: para cambiar de version se edita aqui y se corre --tags petid.
-petid_version: "sha-cf76c8cc8feb07b691591a46d76c755382215f4c"
+petid_version: "sha-d861813dae930c09a3680fa184dd9f5d6c2b877e"
 petid_imagen_web: "ghcr.io/deyvysz/pet-id-web"
 petid_imagen_reconocimiento: "ghcr.io/deyvysz/pet-id-reconocimiento"
 petid_stack_dir: /opt/petid/stacks/petid
