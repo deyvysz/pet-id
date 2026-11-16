@@ -24,7 +24,9 @@ Infraestructura lista en el repositorio: Dockerfiles, GitHub Actions para GHCR, 
 
 Avance del 15 y 16 de noviembre de 2026, contra el servidor real (Contabo Cloud VPS 4, US Central, 194.238.30.239): usuario `admin` con llave, base, SSH solo con llave, VPN WireGuard (servidor 10.10.0.1, cliente 10.10.0.2), cortafuegos con denegación por defecto (comprobado: el 22 no responde desde internet), Docker 29.9.2, Swarm de un nodo y redes `edge` e `internal`.
 
-Falta: certificado de origen y Traefik, proyecto de Supabase, `petid.com.pe` en Cloudflare, secretos cifrados y despliegue de PET ID.
+El 16 de noviembre de 2026 el piloto quedó publicado en https://piloto.petid.com.pe: Traefik, web, reconocimiento y worker corriendo en el swarm, Supabase Cloud con las migraciones 0001 a 0010 y los datos de demo, dominio delegado a Cloudflare e imágenes en GHCR. Se entra con el celular de prueba `987654321` y el código `123456`.
+
+Pendiente en el despliegue: Cloudflare está en modo "Completo" con un certificado autofirmado en el servidor, porque su panel no deja crear el certificado de origen ("This zone is either not part of your account", con la zona activa). Al crearlo hay que reemplazar `secret_origin_cert` y `secret_origin_key`, correr `--tags traefik` y volver a "Completo (estricto)".
 
 ## Siguiente
 
