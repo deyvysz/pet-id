@@ -33,10 +33,14 @@
     - role: swarm
       tags: [swarm]
   post_tasks:
+    # apply es necesario: sin el, las tareas incluidas no heredan la etiqueta
+    # y se saltan al correr con --tags swarm (las redes overlay no se crean).
     - name: Etiquetas y redes overlay
       ansible.builtin.include_role:
         name: swarm
         tasks_from: labels
+        apply:
+          tags: [swarm]
       tags: [swarm]
 
 - name: Traefik
