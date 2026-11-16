@@ -98,6 +98,9 @@ Cambiar `petid_version` al nuevo `sha-<commit>` y correr `--tags petid`. Si el s
 
 ## Errores conocidos
 
+- El ensayo (`--check`) de `--tags docker` siempre falla con "No package matching 'docker-ce' is available": en modo ensayo el repositorio de Docker no se agrega de verdad, así que el paso de instalación no encuentra el paquete. Correr esa etiqueta directo, sin `--check`.
+- Contabo entrega el servidor solo con `root` y contraseña, y su imagen de Ubuntu ya trae un grupo `admin` sin usuario. El usuario se crea con `adduser --disabled-password --gecos "" --ingroup admin admin`, se le da `sudo`, se le copia la llave con `ssh-copy-id` y al final se bloquea su contraseña (`sudo passwd -l admin`).
+
 - La conexión directa a la base de Supabase es solo IPv6; se usa el pooler en modo sesión.
 - Docker 29 exige Traefik 3.6.1 o superior.
 - El worker tarda cerca de un minuto en cargar el modelo al arrancar.

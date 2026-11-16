@@ -22,7 +22,9 @@ Construcción de la fase 1: los cuatro frentes están integrados en `main`. Falt
 
 Infraestructura lista en el repositorio: Dockerfiles, GitHub Actions para GHCR, Ansible en `infra/ansible/` y guía en `docs/operacion/despliegue-piloto.md`. Verificado aquí: sintaxis del playbook, plantillas de los stacks y build de la web en modo standalone. No se ha corrido contra un servidor.
 
-Falta de Deyvys: contratar el VPS, crear el proyecto Supabase, pasar `petid.com.pe` a Cloudflare y cargar los secretos.
+Avance del 15 y 16 de noviembre de 2026, contra el servidor real (Contabo Cloud VPS 4, US Central, 194.238.30.239): usuario `admin` con llave, base, SSH solo con llave, VPN WireGuard (servidor 10.10.0.1, cliente 10.10.0.2), cortafuegos con denegación por defecto (comprobado: el 22 no responde desde internet), Docker 29.9.2, Swarm de un nodo y redes `edge` e `internal`.
+
+Falta: certificado de origen y Traefik, proyecto de Supabase, `petid.com.pe` en Cloudflare, secretos cifrados y despliegue de PET ID.
 
 ## Siguiente
 
