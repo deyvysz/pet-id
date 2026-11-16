@@ -5,10 +5,10 @@
 # Se crea una sola vez, en WSL:
 #   mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/petid.txt
 #   export SOPS_AGE_KEY_FILE=~/.config/sops/age/petid.txt   # agregar a ~/.bashrc
-# El comando imprime "Public key: age1..."; esa linea reemplaza el valor de abajo.
+# El comando imprime "Public key: age1..."; ese valor es el de abajo (llave creada el 15/11/2026).
 # La llave privada (petid.txt) no se sube al repositorio ni se comparte; se
 # guarda una copia en el gestor de contrasenas.
 creation_rules:
   - path_regex: (^|/)[^/]+\.sops\.ya?ml$
     age: >-
-      REEMPLAZAR_POR_LA_LLAVE_PUBLICA_AGE_DE_PETID
+      age19wcx0zq9kc7h93zmdkncnks0zj99x8qe70zed7z9eypt9cgrzf2qae6qdz

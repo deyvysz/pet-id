@@ -1,6 +1,6 @@
 ---
 # SSH solo con llave. El acceso desde internet lo cierra el cortafuegos;
-# SSH entra por la VPN (wg0) y por la red privada (eth1).
+# SSH entra solo por la VPN (wg0).
 - name: Endurecimiento de SSH
   ansible.builtin.copy:
     dest: /etc/ssh/sshd_config.d/00-endurecimiento.conf

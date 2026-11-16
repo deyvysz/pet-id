@@ -12,8 +12,8 @@ wireguard_port: 51820
 # cliente y nunca la comparte. Siguiente IP libre: 10.10.0.3.
 wireguard_peers:
   - name: Deyvys, computadora personal
-    # Llave publica del cliente WireGuard (Windows o WSL); se completa antes de la primera corrida.
-    public_key: ""
+    # Llave publica del cliente WireGuard del WSL PetId (la privada esta en /etc/wireguard/petid-cliente.key).
+    public_key: "CuIcRFqfKWrqvUkx/IjO/bgpdvAqone4kKYGNqVpZGY="
     address: 10.10.0.2/32
 
 # Docker. Version fija; para actualizar se cambia aqui y se prueba antes.
