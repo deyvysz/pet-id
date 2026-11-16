@@ -5,7 +5,7 @@ Fecha: 15 de noviembre de 2026. Decisión 013. Sigue el manual de la plataforma 
 ## 0. Lo que hace falta
 
 - VPS en Contabo: Cloud VPS 4 (4 vCPU, 8 GB, 100 GB SSD), US Central, Ubuntu 24.04, usuario `admin` con tu llave ed25519 (creada en WSL, nunca en una carpeta sincronizada).
-- Proyecto en Supabase Cloud, región East US: Ohio (us-east-2) si el panel la ofrece, por ser la más cercana al servidor; si no, North Virginia (us-east-1).
+- Proyecto en Supabase Cloud. El del piloto es `petid-piloto`, región East US (Ohio, us-east-2), referencia `qsjlnvhywowwwcpaxwbp`.
 - Zona `petid.com.pe` en Cloudflare, con los DNS del registrador apuntando a Cloudflare.
 - En WSL (`PetId`): `sudo apt install -y pipx age wireguard-tools && pipx install --include-deps ansible && pipx inject ansible docker` y SOPS (binario de github.com/getsops/sops/releases).
 

@@ -17,9 +17,10 @@ secret_origin_key: |
 
 # Supabase (Project Settings > API y > Database).
 secret_supabase_service_role_key: pegar aqui
-# Cadena del pooler en modo sesion (puerto 5432; copiar el host exacto del panel, cambia segun la region; ej. aws-0-us-east-1.pooler.supabase.com):
-# la conexion directa de Supabase es solo IPv6.
-secret_database_url: postgresql://postgres.REF:CLAVE@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+# Cadena del pooler en modo sesion (boton Connect del panel, pestana de Postgres,
+# Session pooler). La conexion directa de Supabase es solo IPv6, por eso el pooler.
+# Reemplazar CLAVE por la contrasena del Postgres guardada al crear el proyecto.
+secret_database_url: postgresql://postgres.qsjlnvhywowwwcpaxwbp:CLAVE@aws-0-us-east-2.pooler.supabase.com:5432/postgres
 
 # Correo (Resend). Vacio: los avisos se guardan pero no se envian.
 secret_resend_api_key: ""
